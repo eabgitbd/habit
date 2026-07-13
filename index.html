@@ -1,56 +1,2794 @@
-<div id="habit-garden-app">
-  <style>
-    #habit-garden-app { --bg:#f5f2e9;--card:#fffdf8;--ink:#27312b;--muted:#69736b;--primary:#6f9472;--accent:#d88975;--line:#dfe5db; background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,sans-serif;padding:18px;border-radius:20px; }
-    #habit-garden-app *{box-sizing:border-box} #habit-garden-app button,#habit-garden-app input,#habit-garden-app select{font:inherit} #habit-garden-app button{cursor:pointer}
-    #habit-garden-app.dark{--bg:#17231d;--card:#213129;--ink:#edf4ec;--muted:#b3c0b4;--primary:#82b889;--accent:#eea28c;--line:#405447}
-    #habit-garden-app.lavender{--bg:#eee7f5;--card:#fffaff;--ink:#30283c;--muted:#746b7f;--primary:#8264aa;--accent:#d675a7;--line:#e2d8ec}
-    #habit-garden-app .shell{max-width:1180px;margin:auto}.hg-header,.toolbar,.add-form,.section-head,.habit-name,.month-nav,.settings-row{display:flex;align-items:center;gap:10px}.hg-header{justify-content:space-between;padding:8px 4px 20px}.brand{font:500 clamp(1.4rem,3vw,2rem) Georgia,serif;color:var(--primary);letter-spacing:.01em}.subtitle{color:var(--muted);font-size:.9rem}.actions,.tabs{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:8px 12px}.btn:hover{filter:brightness(.97)}.btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}.btn.danger{color:#b64242}.hero,.panel,.settings{background:var(--card);border:1px solid var(--line);border-radius:16px}.hero{padding:20px;margin-bottom:14px}.hero h1{font:500 1.45rem Georgia,serif;margin:0}.hero p{margin:7px 0 0;color:var(--muted)}.toolbar{justify-content:space-between;margin-bottom:14px}.month-nav{font:500 1.1rem Georgia,serif}.icon{padding:6px 10px;font-size:1.15rem}.add-form{padding:14px;margin-bottom:14px;flex-wrap:wrap}.add-form input{flex:1;min-width:180px}.field{padding:9px 10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:9px}.grid{display:grid;gap:14px}.panel{padding:16px;overflow:hidden}.section-head{justify-content:space-between;margin-bottom:12px}.section-head h2{font:500 1.15rem Georgia,serif;margin:0}.progress{font-size:.85rem;color:var(--primary);font-weight:700}.daily-wrap{overflow:auto}.daily-table{width:100%;border-collapse:collapse;min-width:760px}.daily-table th,.daily-table td{border-bottom:1px solid var(--line);padding:6px;text-align:center;font-size:.8rem}.daily-table th:first-child,.daily-table td:first-child{text-align:left;min-width:190px;position:sticky;left:0;background:var(--card);z-index:1}.day-label{color:var(--muted);font-size:.7rem}.check{width:24px;height:24px;padding:0;border-radius:7px;border:1px solid var(--line);background:var(--bg);color:#fff}.check.on{background:var(--primary);border-color:var(--primary)}.weekly-monthly{grid-template-columns:1fr 1fr}.habit-list{list-style:none;padding:0;margin:0}.habit-list li{display:flex;align-items:center;gap:8px;padding:8px 2px;border-bottom:1px solid var(--line)}.habit-list li:last-child{border:0}.habit-name{flex:1;min-width:0}.habit-name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tiny{padding:4px 7px;border:0;background:transparent;color:var(--muted);border-radius:6px}.tiny:hover{background:var(--bg)}.completion{display:flex;gap:5px}.completion .check{width:28px;height:28px}.empty{color:var(--muted);padding:16px 0;text-align:center}.bar{height:9px;background:var(--bg);border-radius:10px;overflow:hidden;flex:1}.bar>i{display:block;height:100%;background:var(--accent);border-radius:inherit}.modal-backdrop{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;padding:16px;z-index:5}.modal-backdrop.open{display:flex}.settings{width:min(650px,100%);max-height:88vh;overflow:auto;padding:18px}.modal-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.modal-title h2{font:500 1.3rem Georgia,serif;margin:0}.tabs{border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px}.tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}.tab-pane{display:none}.tab-pane.active{display:block}.theme-options{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.theme-choice{padding:12px;border:2px solid transparent;background:var(--bg);border-radius:10px;color:var(--ink);text-align:left}.theme-choice.active{border-color:var(--primary)}.swatch{height:18px;border-radius:6px;margin-bottom:7px}.settings-row{justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line)}.settings-row:last-child{border:0}.backup-actions{display:flex;gap:10px;flex-wrap:wrap}.edit-input{width:100%;min-width:0}.toast{position:fixed;right:20px;bottom:20px;background:var(--ink);color:var(--card);padding:10px 14px;border-radius:9px;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:none}@media(max-width:720px){#habit-garden-app{padding:12px}.hg-header{align-items:flex-start}.subtitle{display:none}.weekly-monthly{grid-template-columns:1fr}.toolbar{align-items:flex-start;flex-direction:column}.add-form>*{width:100%}.add-form .btn{width:100%}.theme-options{grid-template-columns:1fr}.daily-table th:first-child,.daily-table td:first-child{min-width:155px}}
-  </style>
-  <div class="shell">
-    <header class="hg-header"><div><div class="brand">🌱 Habit Garden</div><div class="subtitle" data-i="tagline">Small actions, a flourishing life.</div></div><div class="actions"><button class="btn" id="languageBtn">বাংলা</button><button class="btn" id="settingsBtn">⚙ <span data-i="settings">Settings</span></button></div></header>
-    <section class="hero"><h1 id="monthTitle"></h1><p data-i="welcome">Grow one checked habit at a time.</p></section>
-    <div class="toolbar"><div class="month-nav"><button class="btn icon" id="prevMonth" aria-label="Previous month">‹</button><span id="monthNavLabel"></span><button class="btn icon" id="nextMonth" aria-label="Next month">›</button></div><button class="btn primary" id="todayBtn" data-i="today">Today</button></div>
-    <form class="panel add-form" id="addForm"><select class="field" id="habitType"><option value="daily" data-i="daily">Daily</option><option value="weekly" data-i="weekly">Weekly</option><option value="monthly" data-i="monthly">Monthly</option></select><input class="field" id="habitInput" maxlength="70" required data-placeholder="habitPlaceholder" placeholder="Name a new habit"><button class="btn primary" data-i="add">+ Add habit</button></form>
-    <main class="grid"><section class="panel"><div class="section-head"><h2 data-i="daily">Daily</h2><span class="progress" id="dailySummary"></span></div><div class="daily-wrap"><table class="daily-table"><thead id="dailyHead"></thead><tbody id="dailyBody"></tbody></table></div></section><div class="grid weekly-monthly"><section class="panel"><div class="section-head"><h2 data-i="weekly">Weekly</h2><span class="progress" id="weeklySummary"></span></div><ul class="habit-list" id="weeklyList"></ul></section><section class="panel"><div class="section-head"><h2 data-i="monthly">Monthly</h2><span class="progress" id="monthlySummary"></span></div><div class="bar"><i id="monthlyBar"></i></div><ul class="habit-list" id="monthlyList" style="margin-top:10px"></ul></section></div></main>
-  </div>
-  <div class="modal-backdrop" id="modal"><section class="settings" role="dialog" aria-modal="true" aria-labelledby="settingsHeading"><div class="modal-title"><h2 id="settingsHeading" data-i="settings">Settings</h2><button class="btn icon" id="closeSettings" aria-label="Close">×</button></div><div class="tabs"><button class="btn tab active" data-tab="appearance" data-i="appearance">Appearance</button><button class="btn tab" data-tab="data" data-i="backup">Backup & restore</button></div><div class="tab-pane active" id="appearance"><div class="theme-options"><button class="theme-choice" data-theme="sage"><div class="swatch" style="background:#6f9472"></div><span data-i="sage">Sage garden</span></button><button class="theme-choice" data-theme="dark"><div class="swatch" style="background:#17231d"></div><span data-i="midnight">Midnight bloom</span></button><button class="theme-choice" data-theme="lavender"><div class="swatch" style="background:#8264aa"></div><span data-i="lavender">Lavender bliss</span></button></div><div class="settings-row"><label for="languageSelect" data-i="language">Language</label><select class="field" id="languageSelect"><option value="en">English</option><option value="bn">বাংলা</option></select></div></div><div class="tab-pane" id="data"><p data-i="backupInfo">Your habits are saved only in this browser. Export a backup to keep a copy.</p><div class="backup-actions"><button class="btn primary" id="exportBtn" data-i="export">Export backup</button><label class="btn" for="importFile" data-i="import">Import backup</label><input id="importFile" type="file" accept="application/json" hidden><button class="btn danger" id="resetBtn" data-i="reset">Reset all data</button></div></div></section></div><div class="toast" id="toast"></div>
-  <script>
-  (()=>{const root=document.getElementById('habit-garden-app'),key='habit-garden-v1';const now=new Date();const defaults=()=>({theme:'sage',lang:'en',habits:{daily:[{id:uid(),name:'Drink water'},{id:uid(),name:'Read for 20 minutes'}],weekly:[{id:uid(),name:'Exercise 3 times'}],monthly:[{id:uid(),name:'Review my goals'}]},entries:{}});let state;try{state=JSON.parse(localStorage.getItem(key))||defaults()}catch{state=defaults()}let current=ym(now);const T={en:{tagline:'Small actions, a flourishing life.',welcome:'Grow one checked habit at a time.',settings:'Settings',today:'Today',daily:'Daily',weekly:'Weekly',monthly:'Monthly',add:'+ Add habit',habitPlaceholder:'Name a new habit',appearance:'Appearance',backup:'Backup & restore',sage:'Sage garden',midnight:'Midnight bloom',lavender:'Lavender bliss',language:'Language',backupInfo:'Your habits are saved only in this browser. Export a backup to keep a copy.',export:'Export backup',import:'Import backup',reset:'Reset all data',empty:'No habits yet',week:'Week',done:'done',saved:'Saved',deleted:'Habit deleted',resetDone:'Fresh garden ready',badFile:'That backup file is not valid.'},bn:{tagline:'ছোট ছোট অভ্যাসে গড়ে উঠুক সুন্দর জীবন।',welcome:'প্রতিটি টিক আপনার বাগানকে আরও সবুজ করে।',settings:'সেটিংস',today:'আজ',daily:'দৈনিক',weekly:'সাপ্তাহিক',monthly:'মাসিক',add:'+ অভ্যাস যোগ করুন',habitPlaceholder:'নতুন অভ্যাসের নাম',appearance:'রূপ',backup:'ব্যাকআপ ও পুনরুদ্ধার',sage:'সেজ গার্ডেন',midnight:'মিডনাইট ব্লুম',lavender:'ল্যাভেন্ডার ব্লিস',language:'ভাষা',backupInfo:'আপনার তথ্য শুধু এই ব্রাউজারেই সংরক্ষিত। একটি কপি রাখতে ব্যাকআপ নিন।',export:'ব্যাকআপ ডাউনলোড',import:'ব্যাকআপ আপলোড',reset:'সব তথ্য মুছুন',empty:'এখনও কোনো অভ্যাস নেই',week:'সপ্তাহ',done:'সম্পন্ন',saved:'সংরক্ষিত হয়েছে',deleted:'অভ্যাস মুছে ফেলা হয়েছে',resetDone:'নতুন বাগান প্রস্তুত',badFile:'ব্যাকআপ ফাইলটি সঠিক নয়।'}};function uid(){return Math.random().toString(36).slice(2)+Date.now().toString(36)}function ym(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}function dateFor(k){let [y,m]=k.split('-').map(Number);return new Date(y,m-1,1)}function days(k){let d=dateFor(k);return new Date(d.getFullYear(),d.getMonth()+1,0).getDate()}function tr(k){return T[state.lang][k]||k}function save(msg){localStorage.setItem(key,JSON.stringify(state));if(msg)toast(msg)}function toast(s){let el=document.getElementById('toast');el.textContent=s;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1500)}function bucket(type){let m=state.entries[current]||(state.entries[current]={daily:{},weekly:{},monthly:{}});return m[type]}function pct(done,total){return total?Math.round(done/total*100):0}function esc(s){return s.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}function monthLabel(){return dateFor(current).toLocaleDateString(state.lang==='bn'?'bn-BD':'en-US',{month:'long',year:'numeric'})}function shift(n){let d=dateFor(current);d.setMonth(d.getMonth()+n);current=ym(d);render()}function mutate(type,id,fn){let h=state.habits[type].find(x=>x.id===id);if(h){fn(h);save();render()}}function remove(type,id){if(confirm(state.lang==='bn'?'এই অভ্যাসটি মুছবেন?':'Delete this habit?')){state.habits[type]=state.habits[type].filter(x=>x.id!==id);save(tr('deleted'));render()}}function controls(type,h){return `<button class="tiny" data-action="edit" data-type="${type}" data-id="${h.id}" aria-label="Edit">✎</button><button class="tiny" data-action="delete" data-type="${type}" data-id="${h.id}" aria-label="Delete">🗑</button>`}function renderDaily(){let n=days(current),names=state.lang==='bn'?['র','সো','ম','বু','বৃ','শু','শ']:['Su','Mo','Tu','We','Th','Fr','Sa'];document.getElementById('dailyHead').innerHTML='<tr><th>'+tr('daily')+'</th>'+Array.from({length:n},(_,i)=>{let day=i+1,wd=names[new Date(dateFor(current).getFullYear(),dateFor(current).getMonth(),day).getDay()];return `<th><span class="day-label">${wd}</span><br>${day}</th>`}).join('')+'<th>%</th></tr>';let entries=bucket('daily'),habits=state.habits.daily;document.getElementById('dailyBody').innerHTML=habits.length?habits.map(h=>{let count=Object.values(entries[h.id]||{}).filter(Boolean).length;return `<tr><td><div class="habit-name"><span>${esc(h.name)}</span>${controls('daily',h)}</div></td>`+Array.from({length:n},(_,i)=>`<td><button class="check ${(entries[h.id]||{})[i+1]?'on':''}" data-action="daily" data-id="${h.id}" data-day="${i+1}" aria-label="${esc(h.name)}, ${i+1}">${(entries[h.id]||{})[i+1]?'✓':''}</button></td>`).join('')+`<td class="progress">${pct(count,n)}%</td></tr>`}).join(''):`<tr><td colspan="${n+2}" class="empty">${tr('empty')}</td></tr>`;let total=habits.length*n,done=habits.reduce((a,h)=>a+Object.values(entries[h.id]||{}).filter(Boolean).length,0);document.getElementById('dailySummary').textContent=total?`${done}/${total} ${tr('done')}`:''}function renderList(type,id){let habits=state.habits[type],entries=bucket(type),weekly=type==='weekly';document.getElementById(id).innerHTML=habits.length?habits.map(h=>{if(weekly){let e=entries[h.id]||{},done=Object.values(e).filter(Boolean).length;return `<li><div class="habit-name"><span>${esc(h.name)}</span></div><div class="completion">${[1,2,3,4,5].map(w=>`<button class="check ${e[w]?'on':''}" data-action="weekly" data-id="${h.id}" data-week="${w}" aria-label="${tr('week')} ${w}">${e[w]?'✓':w}</button>`).join('')}</div><span class="progress">${pct(done,5)}%</span>${controls(type,h)}</li>`}let on=!!entries[h.id];return `<li><button class="check ${on?'on':''}" data-action="monthly" data-id="${h.id}" aria-label="${esc(h.name)}">${on?'✓':''}</button><div class="habit-name"><span ${on?'style="text-decoration:line-through;opacity:.6"':''}>${esc(h.name)}</span></div>${controls(type,h)}</li>`}).join(''):`<li class="empty">${tr('empty')}</li>`;let done=weekly?habits.reduce((a,h)=>a+Object.values(entries[h.id]||{}).filter(Boolean).length,0):habits.filter(h=>entries[h.id]).length,total=weekly?habits.length*5:habits.length;document.getElementById(type+'Summary').textContent=total?`${done}/${total} ${tr('done')}`:'';if(!weekly)document.getElementById('monthlyBar').style.width=pct(done,total)+'%'}function translate(){root.querySelectorAll('[data-i]').forEach(e=>e.textContent=tr(e.dataset.i));root.querySelectorAll('[data-placeholder]').forEach(e=>e.placeholder=tr(e.dataset.placeholder));document.getElementById('languageBtn').textContent=state.lang==='en'?'বাংলা':'English';document.getElementById('languageSelect').value=state.lang;root.className=state.theme==='dark'?'dark':state.theme==='lavender'?'lavender':''}function render(){translate();let label=monthLabel();document.getElementById('monthTitle').textContent=label;document.getElementById('monthNavLabel').textContent=label;renderDaily();renderList('weekly','weeklyList');renderList('monthly','monthlyList');document.querySelectorAll('.theme-choice').forEach(b=>b.classList.toggle('active',b.dataset.theme===state.theme))}document.getElementById('addForm').addEventListener('submit',e=>{e.preventDefault();let input=document.getElementById('habitInput'),name=input.value.trim(),type=document.getElementById('habitType').value;if(!name)return;state.habits[type].push({id:uid(),name});input.value='';save(tr('saved'));render()});root.addEventListener('click',e=>{let b=e.target.closest('[data-action]');if(!b)return;let {action,type,id,day,week}=b.dataset;if(action==='daily'){let x=bucket('daily')[id]||(bucket('daily')[id]={});x[day]=!x[day];save();render()}if(action==='weekly'){let x=bucket('weekly')[id]||(bucket('weekly')[id]={});x[week]=!x[week];save();render()}if(action==='monthly'){bucket('monthly')[id]=!bucket('monthly')[id];save();render()}if(action==='delete')remove(type,id);if(action==='edit'){let h=state.habits[type].find(x=>x.id===id),name=prompt(state.lang==='bn'?'নাম পরিবর্তন করুন':'Rename habit',h.name);if(name&&name.trim())mutate(type,id,x=>x.name=name.trim())}});document.getElementById('prevMonth').onclick=()=>shift(-1);document.getElementById('nextMonth').onclick=()=>shift(1);document.getElementById('todayBtn').onclick=()=>{current=ym(new Date());render()};document.getElementById('settingsBtn').onclick=()=>document.getElementById('modal').classList.add('open');document.getElementById('closeSettings').onclick=()=>document.getElementById('modal').classList.remove('open');document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('open')});document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.tab-pane').forEach(x=>x.classList.toggle('active',x.id===b.dataset.tab))});document.querySelectorAll('.theme-choice').forEach(b=>b.onclick=()=>{state.theme=b.dataset.theme;save();render()});document.getElementById('languageBtn').onclick=()=>{state.lang=state.lang==='en'?'bn':'en';save();render()};document.getElementById('languageSelect').onchange=e=>{state.lang=e.target.value;save();render()};document.getElementById('exportBtn').onclick=()=>{let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}));a.download='habit-garden-backup.json';a.click();URL.revokeObjectURL(a.href)};document.getElementById('importFile').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.habits||!x.entries)throw 0;state=x;save(tr('saved'));render()}catch{toast(tr('badFile'))}};r.readAsText(f)};document.getElementById('resetBtn').onclick=()=>{if(confirm(state.lang==='bn'?'সব তথ্য মুছে ফেলবেন?':'Remove all habit data?')){state=defaults();current=ym(new Date());save(tr('resetDone'));render()}};render()})();
-  </script>
-</div>
-<style>
-  #hg-plus{margin-top:14px}#hg-plus .insights{display:grid;grid-template-columns:220px 1fr;gap:14px}#hg-plus .ring-card{display:grid;place-items:center;text-align:center}.hg-ring{width:142px;height:142px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--primary) var(--p),var(--bg) 0);position:relative}.hg-ring:after{content:"";position:absolute;inset:13px;border-radius:50%;background:var(--card)}.hg-ring b,.hg-ring span{z-index:1}.hg-ring b{font:500 1.8rem Georgia,serif}.hg-ring span{font-size:.76rem;color:var(--muted)}#hg-plus .insight-title{font:500 1.15rem Georgia,serif;margin:0 0 10px}.hg-week-chart{height:170px;display:flex;align-items:end;gap:8px;padding:8px 2px 22px;border-bottom:1px solid var(--line)}.hg-week{flex:1;display:flex;align-items:end;justify-content:center;gap:2px;height:100%;position:relative}.hg-week:after{content:attr(data-label);position:absolute;bottom:-20px;color:var(--muted);font-size:.72rem}.hg-week i{display:block;width:10px;max-width:18%;min-height:3px;background:var(--primary);border-radius:5px 5px 0 0;transition:height .35s}.hg-week:nth-child(2) i{background:var(--accent)}.hg-week:nth-child(3) i{background:#88aeb5}.hg-week:nth-child(4) i{background:#b394cf}.hg-week:nth-child(5) i{background:#d4a753}.hg-plus-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.mini-calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.mini-calendar b,.mini-calendar button{min-width:0;padding:6px 2px;border:0;background:transparent;color:var(--ink);text-align:center}.mini-calendar b{color:var(--muted);font-size:.72rem}.mini-calendar button.full{background:var(--primary);color:#fff;border-radius:7px}.leader-item{display:grid;grid-template-columns:minmax(80px,1fr) 80px 38px;gap:8px;align-items:center;margin:9px 0;font-size:.85rem}.leader-item .bar{height:7px}.log-wrap{overflow:auto}.log-table{width:100%;border-collapse:collapse;font-size:.85rem}.log-table th,.log-table td{padding:7px;text-align:left;border-bottom:1px solid var(--line)}.reflection-text{width:100%;min-height:110px;resize:vertical}.tip{margin-top:14px;padding:10px 14px;border-radius:999px;background:color-mix(in srgb,var(--primary) 16%,var(--card));color:var(--ink);text-align:center}.hg-photo{max-width:120px;max-height:80px;border-radius:8px;margin-top:7px;display:block}.report-only{display:none}.rotate-layer{position:fixed;inset:0;z-index:20;background:var(--bg);color:var(--ink);display:none;align-items:center;justify-content:center;padding:22px;text-align:center}.rotate-layer .rotate-box{max-width:330px}.rotate-icon{font-size:3rem;display:block;margin-bottom:12px}@media(max-width:720px){#hg-plus .insights,#hg-plus-grid{grid-template-columns:1fr}.leader-item{grid-template-columns:minmax(70px,1fr) 65px 36px}}@media(max-width:760px) and (orientation:portrait){#hg-rotate.show{display:flex}}
-</style>
-<section id="hg-plus" class="shell">
-  <section class="grid insights"><div class="panel ring-card"><h2 class="insight-title" data-plus="todayProgress">Today's progress</h2><div class="hg-ring" id="hgRing"><b id="hgRingValue">0%</b><span id="hgRingCaption">0 / 0</span></div></div><div class="panel"><h2 class="insight-title" data-plus="weeklyChart">Weekly progress</h2><div class="hg-week-chart" id="hgWeekChart" role="img" aria-label="Weekly daily completion chart"></div></div></section>
-  <div class="grid hg-plus-grid"><section class="panel"><h2 class="insight-title" data-plus="calendar">Mini calendar</h2><div class="mini-calendar" id="hgCalendar"></div></section><section class="panel"><h2 class="insight-title" data-plus="topHabits">Top habits</h2><div id="hgLeaders"></div></section></div>
-  <div class="grid hg-plus-grid"><section class="panel"><h2 class="insight-title" data-plus="dailyLog">Daily progress log</h2><div class="log-wrap"><table class="log-table"><thead><tr><th data-plus="date">Date</th><th data-plus="completion">Completion</th><th data-plus="count">Count</th><th data-plus="streak">Best streak</th></tr></thead><tbody id="hgLog"></tbody></table></div></section><section class="panel"><h2 class="insight-title" data-plus="reflection">Monthly reflection</h2><textarea class="field reflection-text" id="hgReflection" data-plus-placeholder="reflectionPlaceholder" placeholder="Write a few words about this month..."></textarea><div class="backup-actions" style="margin-top:8px"><label class="btn" for="hgPhoto" data-plus="photo">Add photo</label><input id="hgPhoto" type="file" accept="image/*" hidden><button class="btn primary" id="hgSaveReflection" data-plus="saveReflection">Save reflection</button><button class="btn" id="hgPdf" data-plus="pdf">Generate PDF report</button></div><img id="hgPhotoPreview" class="hg-photo" hidden alt="Reflection photo"></section></div>
-  <div class="tip" id="hgTip"></div>
-</section>
-<div class="rotate-layer" id="hg-rotate"><div class="rotate-box"><span class="rotate-icon">↻</span><h2 data-plus="rotateTitle">Please rotate your phone</h2><p data-plus="rotateText">This dashboard is easier to use in landscape.</p><button class="btn primary" id="hgRotateContinue" data-plus="continue">Continue anyway</button></div></div>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#8FAE8B">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Habit Garden - অভ্যাস ট্র্যাকার</title>
+
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiSGFiaXQgR2FyZGVuIiwic2hvcnRfbmFtZSI6IkhhYml0IEdhcmRlbiIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjRjZGM0VBIiwidGhlbWVfY29sb3IiOiIjOEZBRThCIiwib3JpZW50YXRpb24iOiJsYW5kc2NhcGUiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9jZG4uanNkZWxpdnIubmV0L2doL3R3ZW1vamkvbWF4cm9kby8xOC4wLjAvYXNzZXRzL3N2Zy8xZjMzZi5zdmciLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnIn0seyJzcmMiOiJodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQvZ2gvdHdlbW9qaS9tYXhyb2RvLzE4LjAuMC9hc3NldHMvc3ZnLzFmMzNmLnN2ZyIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9zdmciLCJwdXJwb3NlIjoibWFza2FibGUifV19">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link id="google-fonts" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&family=Hind+Siliguri:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #F6F3EA;
+            --card-bg: #FFFFFF;
+            --primary: #8FAE8B;
+            --secondary: #A8C4A4;
+            --accent1: #8FAE8B;
+            --accent2: #D4A373;
+            --accent3: #E9C46A;
+            --accent4: #2A9D8F;
+            --accent5: #E76F51;
+            --text: #2D3A2E;
+            --text-secondary: #5C6B5E;
+            --text-muted: #8B9A8D;
+            --border: #E0DDD4;
+            --shadow: rgba(45, 58, 46, 0.08);
+            --shadow-lg: rgba(45, 58, 46, 0.15);
+            --font-heading: 'Noto Serif Bengali', 'Playfair Display', serif;
+            --font-body: 'Hind Siliguri', 'Poppins', sans-serif;
+            --radius: 20px;
+            --radius-sm: 12px;
+            --radius-lg: 28px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%; height: 100%;
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body { font-size: 14px; line-height: 1.6; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        @keyframes rotatePhone { 0% { transform: rotate(0deg); } 25% { transform: rotate(90deg); } 50% { transform: rotate(0deg); } 75% { transform: rotate(90deg); } 100% { transform: rotate(0deg); } }
+        @keyframes fillBar { from { width: 0%; } }
+        @keyframes ringFill { from { stroke-dashoffset: 283; } }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        .animate-fade { animation: fadeIn 0.5s ease-out forwards; }
+        .animate-slide { animation: slideIn 0.4s ease-out forwards; }
+
+        /* App Container */
+        #app { min-height: 100vh; position: relative; }
+
+        /* Decorative SVGs */
+        .deco-leaf {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.06;
+            transition: opacity 0.3s;
+        }
+        .deco-leaf.top-left { top: -20px; left: -30px; width: 200px; }
+        .deco-leaf.top-right { top: -10px; right: -20px; width: 180px; transform: scaleX(-1); }
+        .deco-leaf.bottom-left { bottom: -30px; left: -20px; width: 160px; transform: rotate(180deg); }
+        .deco-leaf.bottom-right { bottom: -20px; right: -30px; width: 190px; transform: scaleX(-1) rotate(180deg); }
+
+        /* Header */
+        .header {
+            position: sticky; top: 0; z-index: 100;
+            background: var(--bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .logo-icon {
+            width: 42px; height: 42px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 12px var(--shadow-lg);
+        }
+
+        .logo-text {
+            font-family: var(--font-heading);
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.2;
+        }
+
+        .logo-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .header-btn {
+            background: var(--card-bg);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 14px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex; align-items: center; gap: 6px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .header-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .header-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .month-nav {
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .month-nav button {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            border: 1.5px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 16px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .month-nav button:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .month-display {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 600;
+            min-width: 140px;
+            text-align: center;
+        }
+
+        /* Main Layout */
+        .main-container {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr 300px;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: 0 4px 20px var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 30px var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text);
+        }
+
+        .card-title .icon {
+            width: 28px; height: 28px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        /* Progress Ring */
+        .progress-ring-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .progress-ring {
+            position: relative;
+            width: 180px; height: 180px;
+        }
+
+        .progress-ring svg {
+            transform: rotate(-90deg);
+            width: 100%; height: 100%;
+        }
+
+        .progress-ring-bg {
+            fill: none;
+            stroke: var(--border);
+            stroke-width: 12;
+        }
+
+        .progress-ring-fill {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-dasharray: 283;
+            stroke-dashoffset: 283;
+            transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .progress-ring-text {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .progress-ring-value {
+            font-family: var(--font-heading);
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .progress-ring-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* Bar Charts */
+        .week-chart {
+            margin-bottom: 16px;
+        }
+
+        .week-chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .week-chart-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .week-chart-value {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .week-bars {
+            display: flex;
+            gap: 4px;
+            height: 40px;
+            align-items: flex-end;
+        }
+
+        .day-bar {
+            flex: 1;
+            border-radius: 6px 6px 0 0;
+            min-height: 4px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .day-bar:hover {
+            filter: brightness(1.1);
+            transform: scaleY(1.05);
+        }
+
+        .day-bar-label {
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .day-bar-tooltip {
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 10;
+        }
+
+        .day-bar:hover .day-bar-tooltip { opacity: 1; }
+
+        /* Habit Grid */
+        .habit-section { margin-bottom: 24px; }
+
+        .habit-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .habit-section-title {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .habit-add-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 6px 14px;
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex; align-items: center; gap: 4px;
+            transition: all 0.2s;
+        }
+
+        .habit-add-btn:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        .habit-grid {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .habit-grid th {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            padding: 8px 4px;
+            text-align: center;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .habit-grid td {
+            padding: 6px 4px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .habit-name-cell {
+            text-align: left !important;
+            padding-left: 8px !important;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 140px;
+        }
+
+        .habit-checkbox {
+            width: 28px; height: 28px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto;
+            transition: all 0.2s;
+            background: var(--card-bg);
+            font-size: 14px;
+            color: transparent;
+        }
+
+        .habit-checkbox:hover {
+            border-color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .habit-checkbox.checked {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .habit-checkbox.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .habit-streak {
+            font-size: 11px;
+            color: var(--accent5);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .habit-actions {
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .habit-row:hover .habit-actions { opacity: 1; }
+
+        .habit-action-btn {
+            width: 24px; height: 24px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .habit-action-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Weekly/Monthly Panels */
+        .simple-habit-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .simple-habit-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: var(--bg);
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+
+        .simple-habit-item:hover {
+            background: var(--border);
+        }
+
+        .simple-habit-checkbox {
+            width: 22px; height: 22px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            font-size: 12px;
+            color: transparent;
+        }
+
+        .simple-habit-checkbox.checked {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .simple-habit-name {
+            flex: 1;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .simple-habit-progress {
+            width: 60px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .simple-habit-progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+            transition: width 0.5s;
+        }
+
+        /* Mini Calendar */
+        .mini-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .mini-cal-header {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 4px 0;
+        }
+
+        .mini-cal-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+        }
+
+        .mini-cal-day:hover {
+            background: var(--border);
+        }
+
+        .mini-cal-day.today {
+            background: var(--primary);
+            color: white;
+        }
+
+        .mini-cal-day.completed {
+            background: var(--secondary);
+            color: var(--text);
+        }
+
+        .mini-cal-day.other-month {
+            color: var(--border);
+        }
+
+        /* Leaderboard */
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .leaderboard-rank {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: var(--bg);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .leaderboard-rank.top { background: var(--accent3); color: var(--text); }
+        .leaderboard-rank.top2 { background: #C0C0C0; color: var(--text); }
+        .leaderboard-rank.top3 { background: #CD7F32; color: white; }
+
+        .leaderboard-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .leaderboard-name {
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .leaderboard-bar {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+
+        .leaderboard-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.5s;
+        }
+
+        .leaderboard-percent {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        /* Progress Log */
+        .log-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .log-table th {
+            text-align: left;
+            padding: 8px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 2px solid var(--border);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .log-table th:hover { color: var(--primary); }
+
+        .log-table td {
+            padding: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .log-table tr:hover { background: var(--bg); }
+
+        /* Reflection */
+        .reflection-textarea {
+            width: 100%;
+            min-height: 120px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            resize: vertical;
+            background: var(--bg);
+            color: var(--text);
+            transition: all 0.2s;
+        }
+
+        .reflection-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(143, 174, 139, 0.15);
+        }
+
+        .photo-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 12px;
+        }
+
+        .photo-upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(143, 174, 139, 0.05);
+        }
+
+        .photo-preview {
+            max-width: 100%;
+            border-radius: var(--radius-sm);
+            margin-top: 10px;
+        }
+
+        /* Motivational Banner */
+        .motivation-banner {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+            margin: 16px 0;
+            animation: float 3s ease-in-out infinite;
+            box-shadow: 0 4px 16px rgba(143, 174, 139, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .motivation-banner:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 24px rgba(143, 174, 139, 0.4);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg);
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--text-muted);
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--accent5);
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-size: 14px;
+            background: var(--bg);
+            color: var(--text);
+            transition: all 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(143, 174, 139, 0.15);
+        }
+
+        .form-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .form-btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        .form-btn.secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1.5px solid var(--border);
+        }
+
+        .form-btn.danger {
+            background: var(--accent5);
+        }
+
+        /* Settings Tabs */
+        .settings-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 4px;
+        }
+
+        .settings-tab {
+            padding: 8px 16px;
+            border: none;
+            background: none;
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .settings-tab:hover { color: var(--text); }
+
+        .settings-tab.active {
+            color: var(--primary);
+        }
+
+        .settings-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0; right: 0;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .theme-card {
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .theme-card:hover { border-color: var(--primary); }
+        .theme-card.active { border-color: var(--primary); background: rgba(143,174,139,0.08); }
+
+        .theme-preview {
+            height: 60px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-name {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .color-picker-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .color-picker-row label {
+            font-size: 13px;
+            font-weight: 600;
+            min-width: 80px;
+        }
+
+        .color-picker-row input[type="color"] {
+            width: 50px; height: 36px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            background: none;
+        }
+
+        /* Portrait Overlay */
+        .portrait-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .portrait-overlay.active { display: flex; }
+
+        .rotate-icon {
+            font-size: 80px;
+            animation: rotatePhone 2s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .portrait-text {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .portrait-sub {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .portrait-btn {
+            padding: 12px 28px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .portrait-btn:hover { transform: scale(1.05); }
+
+        /* Install Banner */
+        .install-banner {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            border: 1.5px solid var(--primary);
+            border-radius: var(--radius);
+            padding: 14px 24px;
+            display: none;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 8px 32px var(--shadow-lg);
+            z-index: 500;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .install-banner.active { display: flex; }
+
+        .install-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 8px 18px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .install-dismiss {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        /* PDF Preview */
+        .pdf-preview {
+            background: white;
+            color: #333;
+            padding: 40px;
+            border-radius: var(--radius-sm);
+            font-family: 'Inter', sans-serif;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 500;
+            z-index: 2000;
+            opacity: 0;
+            transition: all 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Tab Navigation for Mobile */
+        .mobile-tabs {
+            display: none;
+            position: sticky;
+            top: 60px;
+            z-index: 90;
+            background: var(--bg);
+            padding: 8px 16px;
+            gap: 4px;
+            overflow-x: auto;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .mobile-tab {
+            padding: 8px 16px;
+            border: 1.5px solid var(--border);
+            background: var(--card-bg);
+            border-radius: 50px;
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .mobile-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 10px 12px; }
+            .logo-text { font-size: 18px; }
+            .main-container { padding: 12px; }
+            .card { padding: 16px; }
+            .mobile-tabs { display: flex; }
+            .desktop-only { display: none !important; }
+        }
+
+        @media (max-width: 480px) {
+            .progress-ring { width: 140px; height: 140px; }
+            .progress-ring-value { font-size: 28px; }
+            .week-bars { height: 32px; }
+        }
+
+        /* Landscape phone */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header { padding: 6px 12px; }
+            .card { padding: 12px; }
+            .card-title { font-size: 14px; margin-bottom: 10px; }
+            .progress-ring { width: 100px; height: 100px; }
+            .progress-ring-value { font-size: 22px; }
+        }
+
+        /* Dark theme overrides */
+        [data-theme="midnightBloom"] {
+            --bg: #14181A;
+            --card-bg: #1E2A24;
+            --primary: #2A9D8F;
+            --secondary: #264653;
+            --accent1: #2A9D8F;
+            --accent2: #E76F51;
+            --accent3: #E9C46A;
+            --accent4: #F4A261;
+            --accent5: #E76F51;
+            --text: #E8EDDF;
+            --text-secondary: #A8B5A0;
+            --text-muted: #6B7B6E;
+            --border: #2A3A32;
+            --shadow: rgba(0,0,0,0.3);
+            --shadow-lg: rgba(0,0,0,0.5);
+        }
+
+        [data-theme="lavenderBliss"] {
+            --bg: linear-gradient(135deg, #C9B6E4 0%, #EAD9F7 100%);
+            --card-bg: rgba(255,255,255,0.85);
+            --primary: #7B68EE;
+            --secondary: #9B7EDE;
+            --accent1: #7B68EE;
+            --accent2: #FF6B6B;
+            --accent3: #4ECDC4;
+            --accent4: #45B7D1;
+            --accent5: #F7DC6F;
+            --text: #2D1B4E;
+            --text-secondary: #5A4A7A;
+            --text-muted: #8B7AA0;
+            --border: rgba(123,104,238,0.2);
+            --shadow: rgba(45,27,78,0.1);
+            --shadow-lg: rgba(45,27,78,0.2);
+        }
+
+        [data-theme="custom"] {
+            /* Set via JS */
+        }
+
+        /* Bengali numeral support */
+        .bn-num { font-feature-settings: "bnom"; }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div id="app">
+        <!-- Decorative Leaves -->
+        <svg class="deco-leaf top-left" viewBox="0 0 200 200" fill="currentColor">
+            <path d="M100 10 C140 10, 180 50, 180 100 C180 150, 140 190, 100 190 C60 190, 20 150, 20 100 C20 50, 60 10, 100 10 Z M100 30 C70 30, 45 60, 45 100 C45 140, 70 170, 100 170 C130 170, 155 140, 155 100 C155 60, 130 30, 100 30 Z"/>
+            <path d="M100 50 Q120 80, 100 110 Q80 80, 100 50" opacity="0.5"/>
+        </svg>
+        <svg class="deco-leaf top-right" viewBox="0 0 200 200" fill="currentColor">
+            <path d="M100 10 C140 10, 180 50, 180 100 C180 150, 140 190, 100 190 C60 190, 20 150, 20 100 C20 50, 60 10, 100 10 Z"/>
+            <path d="M100 40 Q130 70, 100 120 Q70 70, 100 40" opacity="0.4"/>
+        </svg>
+        <svg class="deco-leaf bottom-left" viewBox="0 0 200 200" fill="currentColor">
+            <path d="M100 20 C150 20, 190 60, 190 110 C190 160, 150 200, 100 200 C50 200, 10 160, 10 110 C10 60, 50 20, 100 20 Z"/>
+        </svg>
+
+        <!-- Portrait Overlay -->
+        <div class="portrait-overlay" id="portraitOverlay">
+            <div class="rotate-icon">📱</div>
+            <div class="portrait-text" id="portraitTitle">দয়া করে ফোন ঘোরান</div>
+            <div class="portrait-sub" id="portraitSub">এই অ্যাপটি ভালোভাবে ব্যবহারের জন্য ল্যান্ডস্কেপ মোডে ঘোরান</div>
+            <button class="portrait-btn" id="portraitContinue">তবুও চালিয়ে যান</button>
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-area">
+                <div class="logo-icon">🌿</div>
+                <div>
+                    <div class="logo-text" id="appTitle">Habit Garden</div>
+                    <div class="logo-sub" id="appSubtitle">অভ্যাস ট্র্যাকার</div>
+                </div>
+            </div>
+
+            <div class="month-nav">
+                <button onclick="changeMonth(-1)">◀</button>
+                <div class="month-display" id="monthDisplay">জুলাই ২০২৬</div>
+                <button onclick="changeMonth(1)">▶</button>
+            </div>
+
+            <div class="header-controls">
+                <button class="header-btn" id="langBtn" onclick="toggleLanguage()">বাংলা / EN</button>
+                <button class="header-btn" onclick="openSettings()">⚙️ <span id="settingsLabel">সেটিংস</span></button>
+                <button class="header-btn" onclick="generatePDF()">📄 <span id="pdfLabel">PDF</span></button>
+                <button class="header-btn" id="newMonthBtn" onclick="createNewMonth()">📅 <span id="newMonthLabel">নতুন মাস</span></button>
+                <button class="header-btn" id="installBtn" onclick="installApp()" style="display:none">📲 <span id="installLabel">ইনস্টল</span></button>
+            </div>
+        </header>
+
+        <!-- Mobile Tabs -->
+        <div class="mobile-tabs" id="mobileTabs">
+            <button class="mobile-tab active" onclick="switchTab('overview')" id="tab-overview">সারাংশ</button>
+            <button class="mobile-tab" onclick="switchTab('daily')" id="tab-daily">দৈনিক</button>
+            <button class="mobile-tab" onclick="switchTab('weekly')" id="tab-weekly">সাপ্তাহিক</button>
+            <button class="mobile-tab" onclick="switchTab('monthly')" id="tab-monthly">মাসিক</button>
+            <button class="mobile-tab" onclick="switchTab('progress')" id="tab-progress">প্রগ্রেস</button>
+            <button class="mobile-tab" onclick="switchTab('reflection')" id="tab-reflection">চিন্তন</button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <!-- Motivation Banner -->
+            <div class="motivation-banner" id="motivationBanner" onclick="rotateTip()">
+                💡 <span id="motivationText">প্রতিদিন ছোট ছোট পদক্ষেপ বড় পরিবর্তন আনে!</span>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Left Column -->
+                <div class="left-col" id="leftCol">
+                    <!-- Daily Progress Ring -->
+                    <div class="card animate-fade" id="card-ring">
+                        <div class="card-title">
+                            <span class="icon">🎯</span>
+                            <span id="ringTitle">আজকের অগ্রগতি</span>
+                        </div>
+                        <div class="progress-ring-container">
+                            <div class="progress-ring">
+                                <svg viewBox="0 0 100 100">
+                                    <circle class="progress-ring-bg" cx="50" cy="50" r="45"/>
+                                    <circle class="progress-ring-fill" id="dailyRing" cx="50" cy="50" r="45"/>
+                                </svg>
+                                <div class="progress-ring-text">
+                                    <div class="progress-ring-value" id="ringPercent">0%</div>
+                                    <div class="progress-ring-label" id="ringLabel">সম্পন্ন</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mini Calendar -->
+                    <div class="card animate-fade" id="card-calendar" style="animation-delay:0.1s">
+                        <div class="card-title">
+                            <span class="icon">📅</span>
+                            <span id="calendarTitle">ক্যালেন্ডার</span>
+                        </div>
+                        <div class="mini-calendar" id="miniCalendar"></div>
+                    </div>
+
+                    <!-- Top Habits -->
+                    <div class="card animate-fade" id="card-leaderboard" style="animation-delay:0.2s">
+                        <div class="card-title">
+                            <span class="icon">🏆</span>
+                            <span id="leaderboardTitle">শীর্ষ অভ্যাস</span>
+                        </div>
+                        <div id="leaderboard"></div>
+                    </div>
+                </div>
+
+                <!-- Center Column -->
+                <div class="center-col" id="centerCol">
+                    <!-- Weekly Bar Chart -->
+                    <div class="card animate-fade" id="card-weekly-chart">
+                        <div class="card-title">
+                            <span class="icon">📊</span>
+                            <span id="weeklyChartTitle">সাপ্তাহিক অগ্রগতি</span>
+                        </div>
+                        <div id="weeklyCharts"></div>
+                    </div>
+
+                    <!-- Daily Habits -->
+                    <div class="card animate-fade" id="card-daily">
+                        <div class="habit-section-header">
+                            <div class="card-title" style="margin:0">
+                                <span class="icon">☀️</span>
+                                <span id="dailyTitle">দৈনিক অভ্যাস</span>
+                            </div>
+                            <button class="habit-add-btn" onclick="addHabit('daily')">
+                                <span>+</span> <span id="addDaily">যোগ করুন</span>
+                            </button>
+                        </div>
+                        <div style="overflow-x:auto">
+                            <table class="habit-grid" id="dailyHabitsGrid"></table>
+                        </div>
+                    </div>
+
+                    <!-- Weekly Habits -->
+                    <div class="card animate-fade" id="card-weekly">
+                        <div class="habit-section-header">
+                            <div class="card-title" style="margin:0">
+                                <span class="icon">📆</span>
+                                <span id="weeklyTitle">সাপ্তাহিক অভ্যাস</span>
+                            </div>
+                            <button class="habit-add-btn" onclick="addHabit('weekly')">
+                                <span>+</span> <span id="addWeekly">যোগ করুন</span>
+                            </button>
+                        </div>
+                        <div id="weeklyHabits"></div>
+                    </div>
+
+                    <!-- Monthly Habits -->
+                    <div class="card animate-fade" id="card-monthly">
+                        <div class="habit-section-header">
+                            <div class="card-title" style="margin:0">
+                                <span class="icon">🌙</span>
+                                <span id="monthlyTitle">মাসিক অভ্যাস</span>
+                            </div>
+                            <button class="habit-add-btn" onclick="addHabit('monthly')">
+                                <span>+</span> <span id="addMonthly">যোগ করুন</span>
+                            </button>
+                        </div>
+                        <div id="monthlyHabits"></div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="right-col" id="rightCol">
+                    <!-- Progress Log -->
+                    <div class="card animate-fade" id="card-log">
+                        <div class="card-title">
+                            <span class="icon">📈</span>
+                            <span id="logTitle">প্রগ্রেস লগ</span>
+                        </div>
+                        <div style="overflow-x:auto">
+                            <table class="log-table" id="progressLog"></table>
+                        </div>
+                    </div>
+
+                    <!-- Monthly Reflection -->
+                    <div class="card animate-fade" id="card-reflection">
+                        <div class="card-title">
+                            <span class="icon">📝</span>
+                            <span id="reflectionTitle">মাসিক চিন্তন</span>
+                        </div>
+                        <textarea class="reflection-textarea" id="reflectionText" placeholder="এই মাসে আপনার অভিজ্ঞতা লিখুন..."></textarea>
+                        <div class="photo-upload-area" id="photoUpload" onclick="document.getElementById('photoInput').click()">
+                            <div>📷 <span id="uploadLabel">ছবি যোগ করুন</span></div>
+                            <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoUpload(event)">
+                        </div>
+                        <img class="photo-preview" id="photoPreview" style="display:none">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Install Banner -->
+        <div class="install-banner" id="installBanner">
+            <span id="installBannerText">Habit Garden ইনস্টল করুন!</span>
+            <button class="install-btn" onclick="installApp()" id="installBannerBtn">ইনস্টল করুন</button>
+            <button class="install-dismiss" onclick="dismissInstall()">×</button>
+        </div>
+
+        <!-- Toast -->
+        <div class="toast" id="toast"></div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal" id="modalContent" onclick="event.stopPropagation()"></div>
+    </div>
+
 <script>
-(()=>{const K='habit-garden-v1',app=document.getElementById('habit-garden-app'),plus=document.getElementById('hg-plus');let last='';const words={en:{todayProgress:"Today's progress",weeklyChart:'Weekly progress',calendar:'Mini calendar',topHabits:'Top habits',dailyLog:'Daily progress log',date:'Date',completion:'Completion',count:'Count',streak:'Best streak',reflection:'Monthly reflection',reflectionPlaceholder:'Write a few words about this month...',photo:'Add photo',saveReflection:'Save reflection',pdf:'Generate PDF report',rotateTitle:'Please rotate your phone',rotateText:'This dashboard is easier to use in landscape.',continue:'Continue anyway',install:'Install app',share:'Share backup',typography:'Typography',headingFont:'Heading font',bodyFont:'Body font',custom:'Custom theme',primary:'Primary',accent:'Accent',background:'Background',saved:'Saved',tip:['A little progress every day adds up.','Consistency beats intensity.','Your future self will thank you.','Small steps grow into lasting change.']},bn:{todayProgress:'আজকের অগ্রগতি',weeklyChart:'সাপ্তাহিক অগ্রগতি',calendar:'মিনি ক্যালেন্ডার',topHabits:'সেরা অভ্যাস',dailyLog:'দৈনিক অগ্রগতি লগ',date:'তারিখ',completion:'সম্পন্ন',count:'সংখ্যা',streak:'সেরা ধারাবাহিকতা',reflection:'মাসিক প্রতিফলন',reflectionPlaceholder:'এই মাস নিয়ে কিছু লিখুন...',photo:'ছবি যোগ করুন',saveReflection:'প্রতিফলন সংরক্ষণ',pdf:'PDF রিপোর্ট তৈরি',rotateTitle:'অনুগ্রহ করে ফোনটি ঘুরিয়ে নিন',rotateText:'ল্যান্ডস্কেপে এই ড্যাশবোর্ড ব্যবহার করা সহজ।',continue:'এভাবেই চালিয়ে যান',install:'অ্যাপ ইনস্টল',share:'ব্যাকআপ শেয়ার',typography:'টাইপোগ্রাফি',headingFont:'শিরোনামের ফন্ট',bodyFont:'বডি ফন্ট',custom:'কাস্টম থিম',primary:'প্রাথমিক',accent:'অ্যাকসেন্ট',background:'পটভূমি',saved:'সংরক্ষিত',tip:['প্রতিদিনের ছোট অগ্রগতি অনেক দূর নিয়ে যায়।','তীব্রতার চেয়ে ধারাবাহিকতা বেশি শক্তিশালী।','আপনার ভবিষ্যৎ নিজ আপনাকে ধন্যবাদ দেবে।','ছোট পদক্ষেপ থেকেই স্থায়ী পরিবর্তন আসে।']}};function get(){try{return JSON.parse(localStorage.getItem(K))}catch{return null}}function put(s){localStorage.setItem(K,JSON.stringify(s))}function t(s,k){return(words[s.lang]||words.en)[k]||k}function current(){let title=document.getElementById('monthNavLabel').textContent;let s=get();let all=Object.keys(s.entries||{});let now=new Date(),key=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');return all.find(x=>new Date(x+'-01').toLocaleDateString(s.lang==='bn'?'bn-BD':'en-US',{month:'long',year:'numeric'})===title)||key}function days(k){let [y,m]=k.split('-').map(Number);return new Date(y,m,0).getDate()}function esc(x){return String(x).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}function streak(v,n){let best=0,run=0;for(let i=1;i<=n;i++){if(v[i]){run++;best=Math.max(best,run)}else run=0}return best}function ensure(s,k){s.settings=s.settings||{};s.settings.font=s.settings.font||{heading:s.lang==='bn'?'Noto Serif Bengali':'Playfair Display',body:s.lang==='bn'?'Hind Siliguri':'Inter'};s.settings.customColors=s.settings.customColors||{primary:'#6f9472',accent:'#d88975',background:'#f5f2e9'};s.entries=s.entries||{};s.entries[k]=s.entries[k]||{daily:{},weekly:{},monthly:{},reflection:{}};s.entries[k].reflection=s.entries[k].reflection||{};return s}function draw(){let s=get();if(!s)return;let k=current();s=ensure(s,k);let e=s.entries[k],d=days(k),daily=s.habits.daily||[],today=Math.min(new Date().getDate(),d),done=daily.filter(h=>(e.daily[h.id]||{})[today]).length,total=daily.length;let p=total?Math.round(done/total*100):0;document.getElementById('hgRing').style.setProperty('--p',p+'%');document.getElementById('hgRingValue').textContent=p+'%';document.getElementById('hgRingCaption').textContent=done+' / '+total;let chart=document.getElementById('hgWeekChart');chart.innerHTML='';for(let w=0;w<5;w++){let box=document.createElement('div');box.className='hg-week';box.dataset.label=(s.lang==='bn'?'স':'W')+(w+1);for(let i=1;i<=7;i++){let day=w*7+i;if(day>d)continue;let val=total?Math.round(daily.filter(h=>(e.daily[h.id]||{})[day]).length/total*100):0;let bar=document.createElement('i');bar.style.height=Math.max(3,val)+'%';bar.setAttribute('aria-label',val+'%');box.appendChild(bar)}chart.appendChild(box)}let cal=document.getElementById('hgCalendar'),wk=s.lang==='bn'?['র','সো','ম','বু','বৃ','শু','শ']:['Su','Mo','Tu','We','Th','Fr','Sa'];cal.innerHTML=wk.map(x=>'<b>'+x+'</b>').join('');let first=new Date(k+'-01').getDay();cal.innerHTML+='<span></span>'.repeat(first);for(let day=1;day<=d;day++){let n=daily.filter(h=>(e.daily[h.id]||{})[day]).length,full=total&&n===total;cal.innerHTML+='<button class="'+(full?'full':'')+'" aria-label="'+day+' '+n+'/'+total+'">'+day+'</button>'}let ranks=daily.map(h=>{let n=Object.values(e.daily[h.id]||{}).filter(Boolean).length;return{name:h.name,p:total?Math.round(n/d*100):0,n,st:streak(e.daily[h.id]||{},d)}}).sort((a,b)=>b.p-a.p);document.getElementById('hgLeaders').innerHTML=ranks.length?ranks.slice(0,10).map(x=>'<div class="leader-item"><span>'+esc(x.name)+'</span><div class="bar"><i style="width:'+x.p+'%"></i></div><b>'+x.p+'%</b></div>').join(''):'<p class="empty">'+(s.lang==='bn'?'এখনও কোনো অভ্যাস নেই':'No habits yet')+'</p>';let rows=[];for(let day=1;day<=d;day++){let n=daily.filter(h=>(e.daily[h.id]||{})[day]).length,best=Math.max(0,...daily.map(h=>streak(Object.fromEntries(Object.entries(e.daily[h.id]||{}).filter(([q,v])=>Number(q)<=day&&v)),day)));rows.push('<tr><td>'+day+'</td><td>'+pformat(s,n,total)+'</td><td>'+n+'/'+total+'</td><td>'+best+'</td></tr>')}document.getElementById('hgLog').innerHTML=rows.join('');let r=document.getElementById('hgReflection');if(document.activeElement!==r)r.value=e.reflection.text||'';let im=document.getElementById('hgPhotoPreview');if(e.reflection.photo){im.src=e.reflection.photo;im.hidden=false}else im.hidden=true;plus.querySelectorAll('[data-plus]').forEach(x=>x.textContent=t(s,x.dataset.plus));plus.querySelectorAll('[data-plus-placeholder]').forEach(x=>x.placeholder=t(s,x.dataset.plusPlaceholder));document.getElementById('hgTip').textContent='✦ '+t(s,'tip')[(new Date().getDate())%t(s,'tip').length];injectSettings(s);document.documentElement.lang=s.lang==='bn'?'bn':'en';last=JSON.stringify(s)}function pformat(s,n,total){let q=total?Math.round(n/total*100):0;return q+'%'}function injectSettings(s){let data=document.getElementById('data');if(!data||document.getElementById('hgExtraSettings'))return;let box=document.createElement('div');box.id='hgExtraSettings';box.innerHTML='<div class="settings-row"><button class="btn" id="hgShare">'+t(s,'share')+'</button><button class="btn" id="hgInstall">'+t(s,'install')+'</button></div><div class="settings-row"><span>'+t(s,'typography')+'</span><select class="field" id="hgHeading"><option>Playfair Display</option><option>Noto Serif Bengali</option><option>Poppins</option><option>Quicksand</option><option>Fredoka</option></select><select class="field" id="hgBody"><option>Inter</option><option>Hind Siliguri</option><option>Poppins</option><option>Quicksand</option></select></div><div class="settings-row"><span>'+t(s,'custom')+'</span><input id="hgPrimary" type="color" value="'+s.settings.customColors.primary+'"><input id="hgAccent" type="color" value="'+s.settings.customColors.accent+'"><input id="hgBackground" type="color" value="'+s.settings.customColors.background+'"><button class="btn" id="hgCustomApply">'+t(s,'saved')+'</button></div>';data.appendChild(box);let useFont=()=>{let x=get();x.settings.font={heading:document.getElementById('hgHeading').value,body:document.getElementById('hgBody').value};put(x);app.style.fontFamily='"'+x.settings.font.body+'",sans-serif';document.querySelectorAll('.brand,h1,h2').forEach(q=>q.style.fontFamily='"'+x.settings.font.heading+'",serif')};document.getElementById('hgHeading').value=s.settings.font.heading;document.getElementById('hgBody').value=s.settings.font.body;document.getElementById('hgHeading').onchange=useFont;document.getElementById('hgBody').onchange=useFont;document.getElementById('hgCustomApply').onclick=()=>{let x=get();x.settings.customColors={primary:document.getElementById('hgPrimary').value,accent:document.getElementById('hgAccent').value,background:document.getElementById('hgBackground').value};x.theme='custom';put(x);app.style.setProperty('--primary',x.settings.customColors.primary);app.style.setProperty('--accent',x.settings.customColors.accent);app.style.setProperty('--bg',x.settings.customColors.background);draw()};document.getElementById('hgShare').onclick=shareBackup;document.getElementById('hgInstall').onclick=install}
-let deferred;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e});function backupFile(){return new File([JSON.stringify(get(),null,2)],'habit-garden-backup-'+new Date().toISOString().slice(0,10)+'.json',{type:'application/json'})}async function shareBackup(){let f=backupFile();if(navigator.share&&navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({title:'Habit Garden backup',files:[f]})}catch{}}else{let a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;a.click();alert('Direct sharing is unavailable here; your backup was downloaded.')}}async function install(){if(deferred){deferred.prompt();await deferred.userChoice;deferred=null}else alert('Use your browser menu to install this app.')}document.getElementById('hgSaveReflection').onclick=()=>{let s=get(),k=current();s=ensure(s,k);s.entries[k].reflection.text=document.getElementById('hgReflection').value;put(s);draw()};document.getElementById('hgPhoto').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{let s=get(),k=current();s=ensure(s,k);s.entries[k].reflection.photo=r.result;put(s);draw()};r.readAsDataURL(f)};document.getElementById('hgPdf').onclick=()=>{let s=get(),k=current(),d=days(k),e=s.entries[k]||{},h=s.habits.daily||[];let win=window.open('','_blank');let title='Habit Garden — '+k;win.document.write('<title>'+title+'</title><style>body{font-family:Arial,sans-serif;padding:30px;color:#27312b}h1{color:#6f9472}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;padding:8px;text-align:left}.bar{height:8px;background:#eee}.bar i{display:block;height:100%;background:#6f9472}</style><h1>'+title+'</h1><p>Generated '+new Date().toLocaleDateString()+'</p><h2>Daily habits</h2><table><tr><th>Habit</th><th>Days completed</th><th>Progress</th><th>Longest streak</th></tr>'+h.map(x=>{let v=(e.daily||{})[x.id]||{},n=Object.values(v).filter(Boolean).length,p=Math.round(n/d*100);return '<tr><td>'+esc(x.name)+'</td><td>'+n+'/'+d+'</td><td>'+p+'%</td><td>'+streak(v,d)+'</td></tr>'}).join('')+'</table><h2>Reflection</h2><p>'+esc((e.reflection||{}).text||'—')+'</p><footer>Habit Garden · '+k+'</footer>');win.document.close();win.focus();setTimeout(()=>win.print(),250)};document.getElementById('hgRotateContinue').onclick=()=>{document.getElementById('hg-rotate').classList.remove('show');if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(()=>{})};function orient(){let o=document.getElementById('hg-rotate');if(matchMedia('(orientation:portrait)').matches&&innerWidth<760&&!sessionStorage.hgRotateDismissed)o.classList.add('show')}document.getElementById('hgRotateContinue').addEventListener('click',()=>sessionStorage.hgRotateDismissed='1');addEventListener('resize',orient);orient();let manifest=document.createElement('link');manifest.rel='manifest';manifest.href='manifest.json';document.head.appendChild(manifest);if('serviceWorker'in navigator)navigator.serviceWorker.register('service-worker.js').catch(()=>{});draw();setInterval(()=>{let s=get(),z=JSON.stringify(s);if(z!==last)draw()},400)})();
+
+// ===================== TRANSLATIONS =====================
+const translations = {
+    bn: {
+        appTitle: "Habit Garden",
+        appSubtitle: "অভ্যাস ট্র্যাকার",
+        settings: "সেটিংস",
+        pdf: "PDF",
+        newMonth: "নতুন মাস",
+        install: "ইনস্টল",
+        todayProgress: "আজকের অগ্রগতি",
+        completed: "সম্পন্ন",
+        calendar: "ক্যালেন্ডার",
+        topHabits: "শীর্ষ অভ্যাস",
+        weeklyChart: "সাপ্তাহিক অগ্রগতি",
+        dailyHabits: "দৈনিক অভ্যাস",
+        weeklyHabits: "সাপ্তাহিক অভ্যাস",
+        monthlyHabits: "মাসিক অভ্যাস",
+        add: "যোগ করুন",
+        progressLog: "প্রগ্রেস লগ",
+        reflection: "মাসিক চিন্তন",
+        uploadPhoto: "ছবি যোগ করুন",
+        habitName: "অভ্যাসের নাম",
+        goal: "লক্ষ্য",
+        save: "সংরক্ষণ করুন",
+        cancel: "বাতিল",
+        delete: "মুছুন",
+        edit: "সম্পাদনা",
+        confirmDelete: "আপনি কি এই অভ্যাস মুছে ফেলতে চান?",
+        yes: "হ্যাঁ",
+        no: "না",
+        exportBackup: "ব্যাকআপ এক্সপোর্ট",
+        importBackup: "ব্যাকআপ ইমপোর্ট",
+        share: "শেয়ার করুন",
+        appearance: "অ্যাপিয়ারেন্স",
+        typography: "টাইপোগ্রাফি",
+        backup: "ব্যাকআপ ও পুনরুদ্ধার",
+        theme: "থিম",
+        headingFont: "হেডিং ফন্ট",
+        bodyFont: "বডি ফন্ট",
+        customTheme: "কাস্টম থিম",
+        primaryColor: "প্রাথমিক রঙ",
+        backgroundColor: "ব্যাকগ্রাউন্ড রঙ",
+        lightMode: "লাইট মোড",
+        darkMode: "ডার্ক মোড",
+        language: "ভাষা",
+        bengaliNumerals: "বাংলা সংখ্যা",
+        on: "চালু",
+        off: "বন্ধ",
+        portraitTitle: "দয়া করে ফোন ঘোরান",
+        portraitSub: "এই অ্যাপটি ভালোভাবে ব্যবহারের জন্য ল্যান্ডস্কেপ মোডে ঘোরান",
+        continueAnyway: "তবুও চালিয়ে যান",
+        installBanner: "Habit Garden ইনস্টল করুন!",
+        installBtn: "ইনস্টল করুন",
+        generatePDF: "PDF রিপোর্ট তৈরি করুন",
+        week: "সপ্তাহ",
+        day: "দিন",
+        days: "দিনগুলো",
+        streak: "স্ট্রিক",
+        bestStreak: "সেরা স্ট্রিক",
+        overall: "সামগ্রিক",
+        total: "মোট",
+        completion: "সম্পন্নতা",
+        date: "তারিখ",
+        goalLabel: "লক্ষ্য",
+        count: "সংখ্যা",
+        longestStreak: "দীর্ঘতম স্ট্রিক",
+        sortBy: "সাজান",
+        newMonthConfirm: "নতুন মাস তৈরি করবেন? বর্তমান অভ্যাসগুলো সংরক্ষিত থাকবে।",
+        backupSuccess: "ব্যাকআপ সফলভাবে ডাউনলোড হয়েছে!",
+        restoreSuccess: "ব্যাকআপ সফলভাবে পুনরুদ্ধার হয়েছে!",
+        restoreConfirm: "এটি বর্তমান সব ডেটা প্রতিস্থাপন করবে। চালিয়ে যেতে চান?",
+        invalidFile: "অবৈধ ফাইল ফরম্যাট!",
+        shareNotSupported: "আপনার ব্রাউজার শেয়ারিং সাপোর্ট করে না। ফাইল ডাউনলোড হয়েছে।",
+        pdfGenerated: "PDF রিপোর্ট তৈরি হয়েছে!",
+        habitAdded: "অভ্যাস যোগ করা হয়েছে!",
+        habitUpdated: "অভ্যাস আপডেট হয়েছে!",
+        habitDeleted: "অভ্যাস মুছে ফেলা হয়েছে!",
+        reflectionSaved: "চিন্তন সংরক্ষিত হয়েছে!",
+        tabOverview: "সারাংশ",
+        tabDaily: "দৈনিক",
+        tabWeekly: "সাপ্তাহিক",
+        tabMonthly: "মাসিক",
+        tabProgress: "প্রগ্রেস",
+        tabReflection: "চিন্তন",
+        su: "রবি", mo: "সোম", tu: "মঙ্গল", we: "বুধ", th: "বৃহ", fr: "শুক্র", sa: "শনি",
+        months: ["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন","জুলাই","অগাস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"],
+        tips: [
+            "প্রতিদিন ছোট ছোট পদক্ষেপ বড় পরিবর্তন আনে!",
+            "আজকের কাজ কালকে ছাড়বেন না!",
+            "ধৈর্য ধরুন, ফল পাবেন!",
+            "নিয়মিততাই সাফল্যের চাবিকাঠি!",
+            "নিজেকে বিশ্বাস করুন, আপনি পারবেন!",
+            "ভালো অভ্যাস গড়ুন, ভালো জীবন পাবেন!",
+            "প্রতিটি দিন একটি নতুন সুযোগ!",
+            "আপনার অগ্রগতিতে গর্বিত হন!"
+        ]
+    },
+    en: {
+        appTitle: "Habit Garden",
+        appSubtitle: "Habit Tracker",
+        settings: "Settings",
+        pdf: "PDF",
+        newMonth: "New Month",
+        install: "Install",
+        todayProgress: "Today's Progress",
+        completed: "Completed",
+        calendar: "Calendar",
+        topHabits: "Top Habits",
+        weeklyChart: "Weekly Progress",
+        dailyHabits: "Daily Habits",
+        weeklyHabits: "Weekly Habits",
+        monthlyHabits: "Monthly Habits",
+        add: "Add",
+        progressLog: "Progress Log",
+        reflection: "Monthly Reflection",
+        uploadPhoto: "Add Photo",
+        habitName: "Habit Name",
+        goal: "Goal",
+        save: "Save",
+        cancel: "Cancel",
+        delete: "Delete",
+        edit: "Edit",
+        confirmDelete: "Are you sure you want to delete this habit?",
+        yes: "Yes",
+        no: "No",
+        exportBackup: "Export Backup",
+        importBackup: "Import Backup",
+        share: "Share",
+        appearance: "Appearance",
+        typography: "Typography",
+        backup: "Backup & Restore",
+        theme: "Theme",
+        headingFont: "Heading Font",
+        bodyFont: "Body Font",
+        customTheme: "Custom Theme",
+        primaryColor: "Primary Color",
+        backgroundColor: "Background Color",
+        lightMode: "Light Mode",
+        darkMode: "Dark Mode",
+        language: "Language",
+        bengaliNumerals: "Bengali Numerals",
+        on: "On",
+        off: "Off",
+        portraitTitle: "Please Rotate Your Phone",
+        portraitSub: "Rotate to landscape for the best experience",
+        continueAnyway: "Continue Anyway",
+        installBanner: "Install Habit Garden!",
+        installBtn: "Install",
+        generatePDF: "Generate PDF Report",
+        week: "Week",
+        day: "Day",
+        days: "Days",
+        streak: "Streak",
+        bestStreak: "Best Streak",
+        overall: "Overall",
+        total: "Total",
+        completion: "Completion",
+        date: "Date",
+        goalLabel: "Goal",
+        count: "Count",
+        longestStreak: "Longest Streak",
+        sortBy: "Sort By",
+        newMonthConfirm: "Create new month? Current habits will be preserved.",
+        backupSuccess: "Backup downloaded successfully!",
+        restoreSuccess: "Backup restored successfully!",
+        restoreConfirm: "This will replace all current data. Continue?",
+        invalidFile: "Invalid file format!",
+        shareNotSupported: "Your browser doesn't support sharing. File downloaded instead.",
+        pdfGenerated: "PDF report generated!",
+        habitAdded: "Habit added!",
+        habitUpdated: "Habit updated!",
+        habitDeleted: "Habit deleted!",
+        reflectionSaved: "Reflection saved!",
+        tabOverview: "Overview",
+        tabDaily: "Daily",
+        tabWeekly: "Weekly",
+        tabMonthly: "Monthly",
+        tabProgress: "Progress",
+        tabReflection: "Reflection",
+        su: "Su", mo: "Mo", tu: "Tu", we: "We", th: "Th", fr: "Fr", sa: "Sa",
+        months: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+        tips: [
+            "Small steps every day bring big changes!",
+            "Don't put off today's work until tomorrow!",
+            "Be patient, you will see results!",
+            "Consistency is the key to success!",
+            "Believe in yourself, you can do it!",
+            "Build good habits, get a good life!",
+            "Every day is a new opportunity!",
+            "Be proud of your progress!"
+        ]
+    }
+};
+
+// ===================== STATE =====================
+let state = {
+    currentLang: 'bn',
+    currentMonth: new Date(),
+    currentTab: 'overview',
+    habits: {
+        daily: [
+            { id: 'h1', name: { bn: '১০ মিনিট ধ্যান', en: 'Meditate 10 min' }, goal: 30 },
+            { id: 'h2', name: { bn: '২ লিটার পানি পান', en: 'Drink 2L water' }, goal: 30 },
+            { id: 'h3', name: { bn: '৩০ মিনিট হাঁটা', en: 'Walk 30 min' }, goal: 30 },
+            { id: 'h4', name: { bn: 'বই পড়া', en: 'Read a book' }, goal: 30 },
+            { id: 'h5', name: { bn: 'সকালে উঠা', en: 'Wake up early' }, goal: 30 }
+        ],
+        weekly: [
+            { id: 'w1', name: { bn: 'ঘর পরিষ্কার', en: 'Deep clean room' }, goal: 4 },
+            { id: 'w2', name: { bn: 'বাজার করা', en: 'Grocery shopping' }, goal: 4 },
+            { id: 'w3', name: { bn: 'পরিবারের সাথে সময়', en: 'Family time' }, goal: 4 }
+        ],
+        monthly: [
+            { id: 'm1', name: { bn: 'ডাক্তার দেখানো', en: 'Doctor visit' }, goal: 1 },
+            { id: 'm2', name: { bn: 'ব্যাংকে যাওয়া', en: 'Bank visit' }, goal: 1 },
+            { id: 'm3', name: { bn: 'বন্ধুদের সাথে দেখা', en: 'Meet friends' }, goal: 2 }
+        ]
+    },
+    entries: {},
+    settings: {
+        theme: 'sageGarden',
+        fontHeading: 'Noto Serif Bengali',
+        fontBody: 'Hind Siliguri',
+        bengaliNumerals: true,
+        customColors: { primary: '#8FAE8B', background: '#F6F3EA', accent: '#A8C4A4' }
+    },
+    installPrompt: null
+};
+
+// Demo data for current month
+const year = 2026;
+const month = 6; // July (0-indexed)
+const monthKey = `${year}-${String(month+1).padStart(2,'0')}`;
+
+state.entries[monthKey] = {
+    daily: {},
+    weekly: {},
+    monthly: {},
+    reflection: { text: '', photo: null }
+};
+
+// Generate demo daily entries
+state.habits.daily.forEach(h => {
+    state.entries[monthKey].daily[h.id] = {};
+    for (let d = 1; d <= 14; d++) {
+        state.entries[monthKey].daily[h.id][d] = Math.random() > 0.3;
+    }
+});
+
+// Demo weekly entries
+state.habits.weekly.forEach(h => {
+    state.entries[monthKey].weekly[h.id] = {};
+    for (let w = 1; w <= 2; w++) {
+        state.entries[monthKey].weekly[h.id][`week${w}`] = Math.random() > 0.3;
+    }
+});
+
+// Demo monthly entries
+state.habits.monthly.forEach(h => {
+    state.entries[monthKey].monthly[h.id] = Math.random() > 0.5;
+});
+
+// ===================== HELPERS =====================
+function t(key) {
+    const val = translations[state.currentLang][key];
+    return val !== undefined ? val : key;
+}
+
+function toBnNum(num) {
+    if (!state.settings.bengaliNumerals || state.currentLang !== 'bn') return String(num);
+    const bn = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+    return String(num).split('').map(d => bn[parseInt(d)] || d).join('');
+}
+
+function formatMonth(date) {
+    const m = t('months')[date.getMonth()];
+    const y = toBnNum(date.getFullYear());
+    return state.currentLang === 'bn' ? `${m} ${y}` : `${m} ${date.getFullYear()}`;
+}
+
+function getMonthKey(date) {
+    return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}`;
+}
+
+function getDaysInMonth(date) {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+}
+
+function getWeekNumber(day, totalDays) {
+    return Math.ceil(day / 7);
+}
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function getEntries() {
+    const key = getMonthKey(state.currentMonth);
+    if (!state.entries[key]) {
+        state.entries[key] = { daily: {}, weekly: {}, monthly: {}, reflection: { text: '', photo: null } };
+    }
+    return state.entries[key];
+}
+
+// ===================== THEME SYSTEM =====================
+const themes = {
+    sageGarden: {
+        bg: '#F6F3EA', cardBg: '#FFFFFF', primary: '#8FAE8B',
+        accent1: '#8FAE8B', accent2: '#D4A373', accent3: '#E9C46A',
+        accent4: '#2A9D8F', accent5: '#E76F51',
+        text: '#2D3A2E', textSec: '#5C6B5E', textMute: '#8B9A8D',
+        border: '#E0DDD4', shadow: 'rgba(45,58,46,0.08)', shadowLg: 'rgba(45,58,46,0.15)',
+        dark: false
+    },
+    midnightBloom: {
+        bg: '#14181A', cardBg: '#1E2A24', primary: '#2A9D8F',
+        accent1: '#2A9D8F', accent2: '#E76F51', accent3: '#E9C46A',
+        accent4: '#F4A261', accent5: '#E76F51',
+        text: '#E8EDDF', textSec: '#A8B5A0', textMute: '#6B7B6E',
+        border: '#2A3A32', shadow: 'rgba(0,0,0,0.3)', shadowLg: 'rgba(0,0,0,0.5)',
+        dark: true
+    },
+    lavenderBliss: {
+        bg: 'linear-gradient(135deg, #C9B6E4 0%, #EAD9F7 100%)',
+        cardBg: 'rgba(255,255,255,0.85)', primary: '#7B68EE',
+        accent1: '#7B68EE', accent2: '#FF6B6B', accent3: '#4ECDC4',
+        accent4: '#45B7D1', accent5: '#F7DC6F',
+        text: '#2D1B4E', textSec: '#5A4A7A', textMute: '#8B7AA0',
+        border: 'rgba(123,104,238,0.2)', shadow: 'rgba(45,27,78,0.1)', shadowLg: 'rgba(45,27,78,0.2)',
+        dark: false
+    }
+};
+
+function applyTheme(themeName) {
+    const theme = themeName === 'custom' ? {
+        bg: state.settings.customColors.background,
+        cardBg: state.currentLang === 'bn' ? 'rgba(255,255,255,0.95)' : '#FFFFFF',
+        primary: state.settings.customColors.primary,
+        accent1: state.settings.customColors.primary,
+        accent2: state.settings.customColors.accent,
+        accent3: '#E9C46A', accent4: '#2A9D8F', accent5: '#E76F51',
+        text: '#2D3A2E', textSec: '#5C6B5E', textMute: '#8B9A8D',
+        border: '#E0DDD4', shadow: 'rgba(45,58,46,0.08)', shadowLg: 'rgba(45,58,46,0.15)',
+        dark: false
+    } : themes[themeName];
+
+    const r = document.documentElement;
+    r.style.setProperty('--bg', theme.bg);
+    r.style.setProperty('--card-bg', theme.cardBg);
+    r.style.setProperty('--primary', theme.primary);
+    r.style.setProperty('--secondary', themeName === 'midnightBloom' ? '#264653' : '#A8C4A4');
+    r.style.setProperty('--accent1', theme.accent1);
+    r.style.setProperty('--accent2', theme.accent2);
+    r.style.setProperty('--accent3', theme.accent3);
+    r.style.setProperty('--accent4', theme.accent4);
+    r.style.setProperty('--accent5', theme.accent5);
+    r.style.setProperty('--text', theme.text);
+    r.style.setProperty('--text-secondary', theme.textSec);
+    r.style.setProperty('--text-muted', theme.textMute);
+    r.style.setProperty('--border', theme.border);
+    r.style.setProperty('--shadow', theme.shadow);
+    r.style.setProperty('--shadow-lg', theme.shadowLg);
+
+    document.body.setAttribute('data-theme', themeName);
+
+    // Update manifest theme color
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', theme.primary);
+}
+
+// ===================== RENDERING =====================
+function renderAll() {
+    updateHeader();
+    renderDailyRing();
+    renderWeeklyCharts();
+    renderDailyHabits();
+    renderWeeklyHabits();
+    renderMonthlyHabits();
+    renderMiniCalendar();
+    renderLeaderboard();
+    renderProgressLog();
+    renderReflection();
+    updateMotivation();
+    applyTheme(state.settings.theme);
+    updateFonts();
+}
+
+function updateHeader() {
+    document.getElementById('monthDisplay').textContent = formatMonth(state.currentMonth);
+    document.getElementById('langBtn').textContent = state.currentLang === 'bn' ? 'বাংলা / EN' : 'BN / English';
+
+    const ids = ['appTitle','appSubtitle','settingsLabel','pdfLabel','newMonthLabel','installLabel',
+        'ringTitle','ringLabel','calendarTitle','leaderboardTitle','weeklyChartTitle',
+        'dailyTitle','weeklyTitle','monthlyTitle','addDaily','addWeekly','addMonthly',
+        'logTitle','reflectionTitle','uploadLabel','portraitTitle','portraitSub','portraitContinue',
+        'installBannerText','installBannerBtn'];
+    ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            const key = id.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/-/g, '');
+            const map = {
+                apptitle: 'appTitle', appsubtitle: 'appSubtitle', settingslabel: 'settings',
+                pdflabel: 'pdf', newmonthlabel: 'newMonth', installlabel: 'install',
+                ringtitle: 'todayProgress', ringlabel: 'completed', calendartitle: 'calendar',
+                leaderboardtitle: 'topHabits', weeklycharttitle: 'weeklyChart',
+                dailytitle: 'dailyHabits', weeklytitle: 'weeklyHabits', monthlytitle: 'monthlyHabits',
+                adddaily: 'add', addweekly: 'add', addmonthly: 'add',
+                logtitle: 'progressLog', reflectiontitle: 'reflection', uploadlabel: 'uploadPhoto',
+                portraittitle: 'portraitTitle', portraitsub: 'portraitSub', portraitcontinue: 'continueAnyway',
+                installbannertext: 'installBanner', installbannerbtn: 'installBtn'
+            };
+            const tkey = map[key] || key;
+            if (translations[state.currentLang][tkey]) {
+                el.textContent = t(tkey);
+            }
+        }
+    });
+
+    // Update mobile tabs
+    const tabs = ['overview','daily','weekly','monthly','progress','reflection'];
+    tabs.forEach(tab => {
+        const el = document.getElementById(`tab-${tab}`);
+        if (el) el.textContent = t(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
+    });
+}
+
+function renderDailyRing() {
+    const entries = getEntries();
+    const days = getDaysInMonth(state.currentMonth);
+    let totalChecks = 0, totalPossible = 0;
+
+    state.habits.daily.forEach(h => {
+        const habitEntries = entries.daily[h.id] || {};
+        for (let d = 1; d <= days; d++) {
+            totalPossible++;
+            if (habitEntries[d]) totalChecks++;
+        }
+    });
+
+    const pct = totalPossible > 0 ? Math.round((totalChecks / totalPossible) * 100) : 0;
+    const ring = document.getElementById('dailyRing');
+    const offset = 283 - (283 * pct / 100);
+    ring.style.strokeDashoffset = offset;
+    document.getElementById('ringPercent').textContent = toBnNum(pct) + '%';
+}
+
+function renderWeeklyCharts() {
+    const entries = getEntries();
+    const days = getDaysInMonth(state.currentMonth);
+    const container = document.getElementById('weeklyCharts');
+    container.innerHTML = '';
+
+    const weekColors = [state.settings.theme === 'midnightBloom' ? '#2A9D8F' : '#8FAE8B', '#D4A373', '#E9C46A', '#2A9D8F', '#E76F51'];
+    const dayNames = [t('su'), t('mo'), t('tu'), t('we'), t('th'), t('fr'), t('sa')];
+
+    for (let w = 1; w <= 5; w++) {
+        const weekDiv = document.createElement('div');
+        weekDiv.className = 'week-chart';
+
+        let weekChecks = 0, weekTotal = 0;
+        const dayBars = [];
+
+        for (let d = (w-1)*7 + 1; d <= Math.min(w*7, days); d++) {
+            let dayChecks = 0;
+            state.habits.daily.forEach(h => {
+                weekTotal++;
+                const he = entries.daily[h.id] || {};
+                if (he[d]) { dayChecks++; weekChecks++; }
+            });
+            const dayPct = state.habits.daily.length > 0 ? (dayChecks / state.habits.daily.length) * 100 : 0;
+            const dayName = dayNames[(new Date(state.currentMonth.getFullYear(), state.currentMonth.getMonth(), d).getDay())];
+            dayBars.push({ pct: dayPct, name: dayName, checks: dayChecks, total: state.habits.daily.length });
+        }
+
+        if (weekTotal === 0) continue;
+
+        const weekPct = Math.round((weekChecks / weekTotal) * 100);
+
+        weekDiv.innerHTML = `
+            <div class="week-chart-header">
+                <span class="week-chart-label">${t('week')} ${toBnNum(w)}</span>
+                <span class="week-chart-value">${toBnNum(weekPct)}%</span>
+            </div>
+            <div class="week-bars">
+                ${dayBars.map(b => `
+                    <div class="day-bar" style="height:${Math.max(b.pct, 4)}%; background:${weekColors[w-1]}">
+                        <div class="day-bar-tooltip">${b.name}: ${toBnNum(Math.round(b.pct))}%</div>
+                        <div class="day-bar-label">${b.name}</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        container.appendChild(weekDiv);
+    }
+}
+
+function renderDailyHabits() {
+    const entries = getEntries();
+    const days = getDaysInMonth(state.currentMonth);
+    const grid = document.getElementById('dailyHabitsGrid');
+
+    let html = '<thead><tr><th style="text-align:left">' + t('habitName') + '</th>';
+    for (let d = 1; d <= days; d++) {
+        html += `<th>${toBnNum(d)}</th>`;
+    }
+    html += `<th>${t('streak')}</th><th></th></tr></thead><tbody>`;
+
+    state.habits.daily.forEach(h => {
+        const habitEntries = entries.daily[h.id] || {};
+        let streak = 0, maxStreak = 0, currentStreak = 0;
+
+        for (let d = 1; d <= days; d++) {
+            if (habitEntries[d]) {
+                streak++;
+                currentStreak++;
+                maxStreak = Math.max(maxStreak, streak);
+            } else {
+                streak = 0;
+            }
+        }
+
+        html += `<tr class="habit-row">
+            <td class="habit-name-cell">
+                <span>${h.name[state.currentLang]}</span>
+                <div class="habit-actions">
+                    <button class="habit-action-btn" onclick="editHabit('daily','${h.id}')">✏️</button>
+                    <button class="habit-action-btn" onclick="deleteHabit('daily','${h.id}')">🗑️</button>
+                </div>
+            </td>`;
+
+        for (let d = 1; d <= days; d++) {
+            const checked = habitEntries[d] ? 'checked' : '';
+            html += `<td><div class="habit-checkbox ${checked}" onclick="toggleDaily('${h.id}',${d})">${checked ? '✓' : ''}</div></td>`;
+        }
+
+        html += `<td><div class="habit-streak">🔥 ${toBnNum(currentStreak)}</div></td>`;
+        html += `<td></td></tr>`;
+    });
+
+    html += '</tbody>';
+    grid.innerHTML = html;
+}
+
+function renderWeeklyHabits() {
+    const entries = getEntries();
+    const container = document.getElementById('weeklyHabits');
+    container.innerHTML = '';
+
+    const list = document.createElement('div');
+    list.className = 'simple-habit-list';
+
+    state.habits.weekly.forEach(h => {
+        const habitEntries = entries.weekly[h.id] || {};
+        let checks = 0;
+        for (let w = 1; w <= 5; w++) {
+            if (habitEntries[`week${w}`]) checks++;
+        }
+        const pct = Math.round((checks / 5) * 100);
+
+        const item = document.createElement('div');
+        item.className = 'simple-habit-item';
+        item.innerHTML = `
+            <div class="simple-habit-checkbox ${checks >= h.goal ? 'checked' : ''}" onclick="toggleWeekly('${h.id}')">${checks >= h.goal ? '✓' : ''}</div>
+            <div class="simple-habit-name">${h.name[state.currentLang]}</div>
+            <div class="simple-habit-progress"><div class="simple-habit-progress-fill" style="width:${pct}%"></div></div>
+            <div style="font-size:11px;font-weight:700;color:var(--primary);min-width:36px;text-align:right">${toBnNum(pct)}%</div>
+            <button class="habit-action-btn" onclick="editHabit('weekly','${h.id}')">✏️</button>
+            <button class="habit-action-btn" onclick="deleteHabit('weekly','${h.id}')">🗑️</button>
+        `;
+        list.appendChild(item);
+    });
+
+    container.appendChild(list);
+}
+
+function renderMonthlyHabits() {
+    const entries = getEntries();
+    const container = document.getElementById('monthlyHabits');
+    container.innerHTML = '';
+
+    const list = document.createElement('div');
+    list.className = 'simple-habit-list';
+
+    state.habits.monthly.forEach(h => {
+        const checked = entries.monthly[h.id] || false;
+
+        const item = document.createElement('div');
+        item.className = 'simple-habit-item';
+        item.innerHTML = `
+            <div class="simple-habit-checkbox ${checked ? 'checked' : ''}" onclick="toggleMonthly('${h.id}')">${checked ? '✓' : ''}</div>
+            <div class="simple-habit-name">${h.name[state.currentLang]}</div>
+            <button class="habit-action-btn" onclick="editHabit('monthly','${h.id}')">✏️</button>
+            <button class="habit-action-btn" onclick="deleteHabit('monthly','${h.id}')">🗑️</button>
+        `;
+        list.appendChild(item);
+    });
+
+    container.appendChild(list);
+}
+
+function renderMiniCalendar() {
+    const entries = getEntries();
+    const days = getDaysInMonth(state.currentMonth);
+    const firstDay = new Date(state.currentMonth.getFullYear(), state.currentMonth.getMonth(), 1).getDay();
+    const container = document.getElementById('miniCalendar');
+
+    const dayNames = [t('su'), t('mo'), t('tu'), t('we'), t('th'), t('fr'), t('sa')];
+    let html = '';
+
+    dayNames.forEach(d => {
+        html += `<div class="mini-cal-header">${d}</div>`;
+    });
+
+    for (let i = 0; i < firstDay; i++) {
+        html += '<div class="mini-cal-day other-month"></div>';
+    }
+
+    const today = new Date();
+    const isCurrentMonth = today.getMonth() === state.currentMonth.getMonth() && today.getFullYear() === state.currentMonth.getFullYear();
+
+    for (let d = 1; d <= days; d++) {
+        let allDone = true;
+        if (state.habits.daily.length > 0) {
+            state.habits.daily.forEach(h => {
+                const he = entries.daily[h.id] || {};
+                if (!he[d]) allDone = false;
+            });
+        } else {
+            allDone = false;
+        }
+
+        const isToday = isCurrentMonth && d === today.getDate();
+        const cls = isToday ? 'today' : (allDone ? 'completed' : '');
+        html += `<div class="mini-cal-day ${cls}" onclick="focusDay(${d})">${toBnNum(d)}</div>`;
+    }
+
+    container.innerHTML = html;
+}
+
+function renderLeaderboard() {
+    const entries = getEntries();
+    const days = getDaysInMonth(state.currentMonth);
+    const container = document.getElementById('leaderboard');
+
+    const stats = [];
+
+    // Daily habits
+    state.habits.daily.forEach(h => {
+        const he = entries.daily[h.id] || {};
+        let checks = 0;
+        for (let d = 1; d <= days; d++) if (he[d]) checks++;
+        stats.push({ name: h.name[state.currentLang], pct: Math.round((checks/days)*100), type: 'daily' });
+    });
+
+    // Weekly habits
+    state.habits.weekly.forEach(h => {
+        const he = entries.weekly[h.id] || {};
+        let checks = 0;
+        for (let w = 1; w <= 5; w++) if (he[`week${w}`]) checks++;
+        stats.push({ name: h.name[state.currentLang], pct: Math.round((checks/5)*100), type: 'weekly' });
+    });
+
+    // Monthly habits
+    state.habits.monthly.forEach(h => {
+        const checked = entries.monthly[h.id] || false;
+        stats.push({ name: h.name[state.currentLang], pct: checked ? 100 : 0, type: 'monthly' });
+    });
+
+    stats.sort((a, b) => b.pct - a.pct);
+
+    const colors = ['#E9C46A', '#C0C0C0', '#CD7F32', 'var(--primary)', 'var(--primary)'];
+
+    let html = '';
+    stats.slice(0, 8).forEach((s, i) => {
+        const rankClass = i === 0 ? 'top' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+        const barColor = i < 3 ? colors[i] : 'var(--primary)';
+        html += `
+            <div class="leaderboard-item">
+                <div class="leaderboard-rank ${rankClass}">${toBnNum(i+1)}</div>
+                <div class="leaderboard-info">
+                    <div class="leaderboard-name">${s.name}</div>
+                    <div class="leaderboard-bar"><div class="leaderboard-bar-fill" style="width:${s.pct}%;background:${barColor}"></div></div>
+                </div>
+                <div class="leaderboard-percent">${toBnNum(s.pct)}%</div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+function renderProgressLog() {
+    const entries = getEntries();
+    const days = getDaysInMonth(state.currentMonth);
+    const table = document.getElementById('progressLog');
+
+    let html = `<thead><tr>
+        <th>${t('date')}</th>
+        <th>${t('goalLabel')}</th>
+        <th>${t('completion')}</th>
+        <th>${t('count')}</th>
+        <th>${t('streak')}</th>
+    </tr></thead><tbody>`;
+
+    for (let d = 1; d <= days; d++) {
+        let checks = 0, total = state.habits.daily.length;
+        let streak = 0;
+        state.habits.daily.forEach(h => {
+            const he = entries.daily[h.id] || {};
+            if (he[d]) checks++;
+        });
+
+        // Calculate streak up to this day
+        for (let i = d; i >= 1; i--) {
+            let dayDone = true;
+            state.habits.daily.forEach(h => {
+                const he = entries.daily[h.id] || {};
+                if (!he[i]) dayDone = false;
+            });
+            if (dayDone) streak++;
+            else break;
+        }
+
+        const pct = total > 0 ? Math.round((checks/total)*100) : 0;
+        html += `<tr>
+            <td>${toBnNum(d)} ${t('months')[state.currentMonth.getMonth()]}</td>
+            <td>${toBnNum(total)}</td>
+            <td><span style="color:var(--primary);font-weight:700">${toBnNum(pct)}%</span></td>
+            <td>${toBnNum(checks)}/${toBnNum(total)}</td>
+            <td>${streak > 0 ? '🔥 ' + toBnNum(streak) : '-'}</td>
+        </tr>`;
+    }
+
+    html += '</tbody>';
+    table.innerHTML = html;
+}
+
+function renderReflection() {
+    const entries = getEntries();
+    document.getElementById('reflectionText').value = entries.reflection.text || '';
+
+    const preview = document.getElementById('photoPreview');
+    if (entries.reflection.photo) {
+        preview.src = entries.reflection.photo;
+        preview.style.display = 'block';
+    } else {
+        preview.style.display = 'none';
+    }
+}
+
+function updateMotivation() {
+    const tips = translations[state.currentLang].tips;
+    const idx = Math.floor(Math.random() * tips.length);
+    document.getElementById('motivationText').textContent = tips[idx];
+}
+
+function rotateTip() {
+    updateMotivation();
+}
+
+function updateFonts() {
+    const r = document.documentElement;
+    r.style.setProperty('--font-heading', `'${state.settings.fontHeading}', 'Noto Serif Bengali', 'Playfair Display', serif`);
+    r.style.setProperty('--font-body', `'${state.settings.fontBody}', 'Hind Siliguri', 'Poppins', sans-serif`);
+}
+
+// ===================== ACTIONS =====================
+function changeMonth(delta) {
+    state.currentMonth = new Date(state.currentMonth.getFullYear(), state.currentMonth.getMonth() + delta, 1);
+    renderAll();
+}
+
+function toggleLanguage() {
+    state.currentLang = state.currentLang === 'bn' ? 'en' : 'bn';
+
+    // Auto-switch fonts for Bengali
+    if (state.currentLang === 'bn') {
+        state.settings.fontHeading = 'Noto Serif Bengali';
+        state.settings.fontBody = 'Hind Siliguri';
+    }
+
+    document.documentElement.lang = state.currentLang;
+    renderAll();
+    saveState();
+}
+
+function toggleDaily(habitId, day) {
+    const entries = getEntries();
+    if (!entries.daily[habitId]) entries.daily[habitId] = {};
+    entries.daily[habitId][day] = !entries.daily[habitId][day];
+    renderAll();
+    saveState();
+}
+
+function toggleWeekly(habitId) {
+    const entries = getEntries();
+    if (!entries.weekly[habitId]) entries.weekly[habitId] = {};
+
+    // Toggle next uncompleted week
+    for (let w = 1; w <= 5; w++) {
+        if (!entries.weekly[habitId][`week${w}`]) {
+            entries.weekly[habitId][`week${w}`] = true;
+            break;
+        }
+    }
+    renderAll();
+    saveState();
+}
+
+function toggleMonthly(habitId) {
+    const entries = getEntries();
+    entries.monthly[habitId] = !entries.monthly[habitId];
+    renderAll();
+    saveState();
+}
+
+function focusDay(day) {
+    showToast(`${t('day')} ${toBnNum(day)} ${t('months')[state.currentMonth.getMonth()]}`);
+}
+
+// ===================== HABIT CRUD =====================
+function addHabit(type) {
+    const name = prompt(state.currentLang === 'bn' ? 'অভ্যাসের নাম লিখুন:' : 'Enter habit name:');
+    if (!name) return;
+
+    const id = 'h_' + Date.now();
+    const habit = {
+        id,
+        name: { bn: name, en: name },
+        goal: type === 'daily' ? 30 : type === 'weekly' ? 4 : 1
+    };
+
+    state.habits[type].push(habit);
+    renderAll();
+    saveState();
+    showToast(t('habitAdded'));
+}
+
+function editHabit(type, id) {
+    const habit = state.habits[type].find(h => h.id === id);
+    if (!habit) return;
+
+    const newName = prompt(state.currentLang === 'bn' ? 'নতুন নাম:' : 'New name:', habit.name[state.currentLang]);
+    if (newName === null) return;
+
+    habit.name[state.currentLang] = newName;
+    if (state.currentLang === 'bn') habit.name.en = newName;
+    else habit.name.bn = newName;
+
+    renderAll();
+    saveState();
+    showToast(t('habitUpdated'));
+}
+
+function deleteHabit(type, id) {
+    if (!confirm(t('confirmDelete'))) return;
+    state.habits[type] = state.habits[type].filter(h => h.id !== id);
+    renderAll();
+    saveState();
+    showToast(t('habitDeleted'));
+}
+
+function createNewMonth() {
+    if (!confirm(t('newMonthConfirm'))) return;
+
+    const nextMonth = new Date(state.currentMonth.getFullYear(), state.currentMonth.getMonth() + 1, 1);
+    const key = getMonthKey(nextMonth);
+
+    state.entries[key] = {
+        daily: {},
+        weekly: {},
+        monthly: {},
+        reflection: { text: '', photo: null }
+    };
+
+    state.currentMonth = nextMonth;
+    renderAll();
+    saveState();
+}
+
+// ===================== REFLECTION =====================
+document.getElementById('reflectionText').addEventListener('input', function() {
+    const entries = getEntries();
+    entries.reflection.text = this.value;
+    saveState();
+});
+
+function handlePhotoUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        const entries = getEntries();
+        entries.reflection.photo = evt.target.result;
+        renderReflection();
+        saveState();
+        showToast(t('reflectionSaved'));
+    };
+    reader.readAsDataURL(file);
+}
+
+// ===================== SETTINGS =====================
+function openSettings() {
+    const overlay = document.getElementById('modalOverlay');
+    const content = document.getElementById('modalContent');
+
+    content.innerHTML = `
+        <div class="modal-header">
+            <div class="modal-title">⚙️ ${t('settings')}</div>
+            <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <div class="settings-tabs">
+            <button class="settings-tab active" onclick="switchSettingsTab('appearance')">${t('appearance')}</button>
+            <button class="settings-tab" onclick="switchSettingsTab('typography')">${t('typography')}</button>
+            <button class="settings-tab" onclick="switchSettingsTab('backup')">${t('backup')}</button>
+        </div>
+        <div id="settingsPanel"></div>
+    `;
+
+    overlay.classList.add('active');
+    switchSettingsTab('appearance');
+}
+
+function switchSettingsTab(tab) {
+    document.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+
+    const panel = document.getElementById('settingsPanel');
+
+    if (tab === 'appearance') {
+        panel.innerHTML = `
+            <div class="form-group">
+                <label class="form-label">${t('theme')}</label>
+                <div class="theme-grid">
+                    <div class="theme-card ${state.settings.theme === 'sageGarden' ? 'active' : ''}" onclick="setTheme('sageGarden')">
+                        <div class="theme-preview" style="background:#F6F3EA"><div style="position:absolute;bottom:8px;left:8px;width:30px;height:8px;background:#8FAE8B;border-radius:4px"></div></div>
+                        <div class="theme-name">Sage Garden</div>
+                    </div>
+                    <div class="theme-card ${state.settings.theme === 'midnightBloom' ? 'active' : ''}" onclick="setTheme('midnightBloom')">
+                        <div class="theme-preview" style="background:#14181A"><div style="position:absolute;bottom:8px;left:8px;width:30px;height:8px;background:#2A9D8F;border-radius:4px"></div></div>
+                        <div class="theme-name">Midnight Bloom</div>
+                    </div>
+                    <div class="theme-card ${state.settings.theme === 'lavenderBliss' ? 'active' : ''}" onclick="setTheme('lavenderBliss')">
+                        <div class="theme-preview" style="background:linear-gradient(135deg,#C9B6E4,#EAD9F7)"><div style="position:absolute;bottom:8px;left:8px;width:30px;height:8px;background:#7B68EE;border-radius:4px"></div></div>
+                        <div class="theme-name">Lavender Bliss</div>
+                    </div>
+                    <div class="theme-card ${state.settings.theme === 'custom' ? 'active' : ''}" onclick="setTheme('custom')">
+                        <div class="theme-preview" style="background:${state.settings.customColors.background}"><div style="position:absolute;bottom:8px;left:8px;width:30px;height:8px;background:${state.settings.customColors.primary};border-radius:4px"></div></div>
+                        <div class="theme-name">${t('customTheme')}</div>
+                    </div>
+                </div>
+            </div>
+            ${state.settings.theme === 'custom' ? `
+            <div class="form-group">
+                <div class="color-picker-row"><label>${t('primaryColor')}</label><input type="color" value="${state.settings.customColors.primary}" onchange="updateCustomColor('primary',this.value)"></div>
+                <div class="color-picker-row"><label>${t('backgroundColor')}</label><input type="color" value="${state.settings.customColors.background}" onchange="updateCustomColor('background',this.value)"></div>
+            </div>
+            ` : ''}
+            <div class="form-group">
+                <label class="form-label">${t('language')}</label>
+                <button class="header-btn" onclick="toggleLanguage(); openSettings()" style="width:auto">
+                    ${state.currentLang === 'bn' ? 'বাংলা → English' : 'English → বাংলা'}
+                </button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">${t('bengaliNumerals')}</label>
+                <button class="header-btn ${state.settings.bengaliNumerals ? 'active' : ''}" onclick="toggleBengaliNumerals()" style="width:auto">
+                    ${state.settings.bengaliNumerals ? t('on') : t('off')}
+                </button>
+            </div>
+        `;
+    } else if (tab === 'typography') {
+        const fonts = ['Noto Serif Bengali','Hind Siliguri','Playfair Display','Poppins','Inter','Quicksand','Fredoka'];
+        panel.innerHTML = `
+            <div class="form-group">
+                <label class="form-label">${t('headingFont')}</label>
+                <select class="form-select" onchange="setFont('heading',this.value)">
+                    ${fonts.map(f => `<option value="${f}" ${state.settings.fontHeading === f ? 'selected' : ''}>${f}</option>`).join('')}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">${t('bodyFont')}</label>
+                <select class="form-select" onchange="setFont('body',this.value)">
+                    ${fonts.map(f => `<option value="${f}" ${state.settings.fontBody === f ? 'selected' : ''}>${f}</option>`).join('')}
+                </select>
+            </div>
+        `;
+    } else if (tab === 'backup') {
+        panel.innerHTML = `
+            <div class="form-group">
+                <button class="form-btn" onclick="exportBackup()">📥 ${t('exportBackup')}</button>
+            </div>
+            <div class="form-group">
+                <button class="form-btn secondary" onclick="document.getElementById('importFile').click()">📤 ${t('importBackup')}</button>
+                <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(event)">
+            </div>
+            <div class="form-group">
+                <button class="form-btn secondary" onclick="shareBackup()">🔗 ${t('share')}</button>
+            </div>
+        `;
+    }
+}
+
+function setTheme(name) {
+    state.settings.theme = name;
+    applyTheme(name);
+    switchSettingsTab('appearance');
+    saveState();
+}
+
+function updateCustomColor(key, value) {
+    state.settings.customColors[key] = value;
+    applyTheme('custom');
+    saveState();
+}
+
+function setFont(type, value) {
+    if (type === 'heading') state.settings.fontHeading = value;
+    else state.settings.fontBody = value;
+    updateFonts();
+    saveState();
+}
+
+function toggleBengaliNumerals() {
+    state.settings.bengaliNumerals = !state.settings.bengaliNumerals;
+    renderAll();
+    saveState();
+    switchSettingsTab('appearance');
+}
+
+function closeModal(e) {
+    if (e && e.target !== e.currentTarget) return;
+    document.getElementById('modalOverlay').classList.remove('active');
+}
+
+// ===================== BACKUP & RESTORE =====================
+function getExportData() {
+    return {
+        version: '1.0',
+        exportDate: new Date().toISOString(),
+        habits: state.habits,
+        entries: state.entries,
+        settings: state.settings
+    };
+}
+
+function exportBackup() {
+    const data = getExportData();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `habit-garden-backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast(t('backupSuccess'));
+}
+
+async function shareBackup() {
+    const data = getExportData();
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+    const file = new File([blob], `habit-garden-backup-${new Date().toISOString().split('T')[0]}.json`, { type: 'application/json' });
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+            await navigator.share({ files: [file], title: 'Habit Garden Backup' });
+        } catch (e) {
+            exportBackup();
+        }
+    } else {
+        exportBackup();
+        showToast(t('shareNotSupported'));
+    }
+}
+
+function importBackup(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        try {
+            const data = JSON.parse(evt.target.result);
+            if (!data.habits || !data.entries) {
+                showToast(t('invalidFile'));
+                return;
+            }
+
+            if (!confirm(t('restoreConfirm'))) return;
+
+            state.habits = data.habits;
+            state.entries = data.entries;
+            if (data.settings) state.settings = { ...state.settings, ...data.settings };
+
+            renderAll();
+            saveState();
+            showToast(t('restoreSuccess'));
+            closeModal();
+        } catch (err) {
+            showToast(t('invalidFile'));
+        }
+    };
+    reader.readAsText(file);
+}
+
+// ===================== PDF GENERATION =====================
+async function generatePDF() {
+    showToast(state.currentLang === 'bn' ? 'PDF তৈরি হচ্ছে...' : 'Generating PDF...');
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+
+    const entries = getEntries();
+    const days = getDaysInMonth(state.currentMonth);
+    const monthName = t('months')[state.currentMonth.getMonth()];
+    const year = state.currentMonth.getFullYear();
+
+    // Helper to add text
+    const addText = (text, x, y, opts = {}) => {
+        doc.setFontSize(opts.size || 12);
+        doc.setTextColor(opts.color || '#2D3A2E');
+        if (opts.bold) doc.setFont(undefined, 'bold');
+        else doc.setFont(undefined, 'normal');
+        doc.text(text, x, y);
+    };
+
+    // Cover
+    doc.setFillColor(143, 174, 139);
+    doc.rect(0, 0, 210, 40, 'F');
+    addText('Habit Garden', 105, 25, { size: 24, bold: true, color: '#FFFFFF' });
+    addText(`${monthName} ${year}`, 105, 35, { size: 14, color: '#FFFFFF' });
+
+    let y = 55;
+
+    // Overall stats
+    let totalChecks = 0, totalPossible = 0;
+    state.habits.daily.forEach(h => {
+        const he = entries.daily[h.id] || {};
+        for (let d = 1; d <= days; d++) {
+            totalPossible++;
+            if (he[d]) totalChecks++;
+        }
+    });
+    const overallPct = totalPossible > 0 ? Math.round((totalChecks/totalPossible)*100) : 0;
+
+    addText(`${t('overall')} ${t('completion')}: ${overallPct}%`, 20, y, { size: 16, bold: true });
+    y += 15;
+
+    // Daily habits table
+    addText(t('dailyHabits'), 20, y, { size: 14, bold: true });
+    y += 10;
+
+    doc.setDrawColor(200);
+    doc.line(20, y, 190, y);
+    y += 5;
+
+    state.habits.daily.forEach(h => {
+        const he = entries.daily[h.id] || {};
+        let checks = 0;
+        for (let d = 1; d <= days; d++) if (he[d]) checks++;
+        const pct = Math.round((checks/days)*100);
+        addText(`${h.name[state.currentLang]}: ${checks}/${days} (${pct}%)`, 20, y);
+        y += 8;
+    });
+
+    y += 10;
+
+    // Weekly habits
+    addText(t('weeklyHabits'), 20, y, { size: 14, bold: true });
+    y += 10;
+    doc.line(20, y, 190, y);
+    y += 5;
+
+    state.habits.weekly.forEach(h => {
+        const he = entries.weekly[h.id] || {};
+        let checks = 0;
+        for (let w = 1; w <= 5; w++) if (he[`week${w}`]) checks++;
+        const pct = Math.round((checks/5)*100);
+        addText(`${h.name[state.currentLang]}: ${checks}/5 (${pct}%)`, 20, y);
+        y += 8;
+    });
+
+    y += 10;
+
+    // Monthly habits
+    addText(t('monthlyHabits'), 20, y, { size: 14, bold: true });
+    y += 10;
+    doc.line(20, y, 190, y);
+    y += 5;
+
+    state.habits.monthly.forEach(h => {
+        const checked = entries.monthly[h.id] ? '✓' : '✗';
+        addText(`${h.name[state.currentLang]}: ${checked}`, 20, y);
+        y += 8;
+    });
+
+    y += 10;
+
+    // Reflection
+    if (entries.reflection.text) {
+        addText(t('reflection'), 20, y, { size: 14, bold: true });
+        y += 10;
+        const splitText = doc.splitTextToSize(entries.reflection.text, 170);
+        splitText.forEach(line => {
+            addText(line, 20, y, { size: 10 });
+            y += 5;
+        });
+    }
+
+    // Footer
+    doc.setFontSize(8);
+    doc.setTextColor(150);
+    doc.text(`Habit Garden - ${new Date().toLocaleDateString()}`, 105, 290, { align: 'center' });
+
+    doc.save(`HabitReport-${monthName}-${year}.pdf`);
+    showToast(t('pdfGenerated'));
+}
+
+// ===================== PWA & INSTALL =====================
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    state.installPrompt = e;
+    document.getElementById('installBtn').style.display = 'flex';
+    document.getElementById('installBanner').classList.add('active');
+});
+
+function installApp() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => {
+            deferredPrompt = null;
+            document.getElementById('installBtn').style.display = 'none';
+            document.getElementById('installBanner').classList.remove('active');
+        });
+    } else {
+        showToast(state.currentLang === 'bn' ? 'ইনস্টল উপলব্ধ নয়' : 'Install not available');
+    }
+}
+
+function dismissInstall() {
+    document.getElementById('installBanner').classList.remove('active');
+}
+
+// Service Worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('data:text/javascript,' + encodeURIComponent(`
+        self.addEventListener('install', e => self.skipWaiting());
+        self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+        self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => new Response('Offline'))));
+    `)).catch(() => {});
+}
+
+// ===================== ORIENTATION =====================
+function checkOrientation() {
+    const overlay = document.getElementById('portraitOverlay');
+    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+    const isMobile = window.innerWidth < 768;
+
+    if (isPortrait && isMobile) {
+        overlay.classList.add('active');
+    } else {
+        overlay.classList.remove('active');
+    }
+}
+
+document.getElementById('portraitContinue').addEventListener('click', () => {
+    document.getElementById('portraitOverlay').classList.remove('active');
+});
+
+window.addEventListener('resize', checkOrientation);
+window.addEventListener('orientationchange', checkOrientation);
+
+// Try to lock orientation when installed
+if (screen.orientation && screen.orientation.lock) {
+    document.addEventListener('click', () => {
+        screen.orientation.lock('landscape').catch(() => {});
+    }, { once: true });
+}
+
+// ===================== MOBILE TABS =====================
+function switchTab(tab) {
+    state.currentTab = tab;
+    document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(`tab-${tab}`).classList.add('active');
+
+    const cards = {
+        overview: ['card-ring', 'card-calendar', 'card-leaderboard', 'card-weekly-chart'],
+        daily: ['card-daily'],
+        weekly: ['card-weekly'],
+        monthly: ['card-monthly'],
+        progress: ['card-weekly-chart', 'card-log'],
+        reflection: ['card-reflection']
+    };
+
+    document.querySelectorAll('.card').forEach(c => c.style.display = 'none');
+    (cards[tab] || []).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'block';
+    });
+}
+
+// ===================== STORAGE =====================
+function saveState() {
+    try {
+        localStorage.setItem('habitGarden', JSON.stringify({
+            habits: state.habits,
+            entries: state.entries,
+            settings: state.settings,
+            currentLang: state.currentLang
+        }));
+    } catch (e) {
+        console.warn('Storage failed', e);
+    }
+}
+
+function loadState() {
+    try {
+        const saved = localStorage.getItem('habitGarden');
+        if (saved) {
+            const data = JSON.parse(saved);
+            if (data.habits) state.habits = data.habits;
+            if (data.entries) state.entries = { ...state.entries, ...data.entries };
+            if (data.settings) state.settings = { ...state.settings, ...data.settings };
+            if (data.currentLang) state.currentLang = data.currentLang;
+        }
+    } catch (e) {
+        console.warn('Load failed', e);
+    }
+}
+
+// ===================== INIT =====================
+loadState();
+renderAll();
+checkOrientation();
+
+// Auto-save reflection
+document.getElementById('reflectionText').addEventListener('blur', () => {
+    saveState();
+    showToast(t('reflectionSaved'));
+});
+
+console.log('Habit Garden loaded successfully!');
 </script>
-<script>
-(() => {
-  const key = 'habit-garden-v1';
-  const nav = document.querySelector('.month-nav');
-  if (!nav || document.getElementById('hgNewMonth')) return;
-  const add = document.createElement('button');
-  add.id = 'hgNewMonth'; add.className = 'btn primary'; add.textContent = '+ New month';
-  nav.appendChild(add);
-  add.addEventListener('click', () => {
-    const s = JSON.parse(localStorage.getItem(key));
-    const label = document.getElementById('monthNavLabel').textContent;
-    const current = Object.keys(s.entries || {}).find(k => new Date(k + '-01').toLocaleDateString(s.lang === 'bn' ? 'bn-BD' : 'en-US', { month:'long', year:'numeric' }) === label) || new Date().toISOString().slice(0,7);
-    const d = new Date(current + '-01'); d.setMonth(d.getMonth() + 1);
-    const next = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2,'0');
-    s.entries = s.entries || {}; s.entries[next] = s.entries[next] || { daily:{}, weekly:{}, monthly:{}, reflection:{} };
-    localStorage.setItem(key, JSON.stringify(s));
-    const target = d.toLocaleDateString(s.lang === 'bn' ? 'bn-BD' : 'en-US', { month:'long', year:'numeric' });
-    let steps = 0; const forward = document.getElementById('nextMonth');
-    while (document.getElementById('monthNavLabel').textContent !== target && steps++ < 24) forward.click();
-  });
-})();
-</script>
+</body>
+</html>
