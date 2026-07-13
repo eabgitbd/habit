@@ -1,7 +1,7 @@
 {
   "name": "Habit Garden",
   "short_name": "Habit Garden",
-  "start_url": "./habit-garden.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "orientation": "landscape",
   "background_color": "#F6F3EA",
