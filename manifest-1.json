@@ -1,0 +1,57 @@
+{
+  "name": "Habit Garden - Habit Tracker",
+  "short_name": "Habit Garden",
+  "description": "Track your daily, weekly and monthly habits with a beautiful garden-themed interface. Supports Bengali and English.",
+  "start_url": ".",
+  "id": ".",
+  "display": "standalone",
+  "background_color": "#F6F3EA",
+  "theme_color": "#8FAE8B",
+  "orientation": "landscape",
+  "scope": ".",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["lifestyle", "productivity", "health"],
+  "lang": "bn",
+  "dir": "ltr",
+  "shortcuts": [
+    {
+      "name": "Daily Habits",
+      "short_name": "Daily",
+      "description": "View daily habits",
+      "url": "./?tab=daily",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Progress Log",
+      "short_name": "Progress",
+      "description": "View progress log",
+      "url": "./?tab=progress",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
