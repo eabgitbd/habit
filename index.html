@@ -19,7 +19,8 @@
     <link id="google-fonts" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- Embedded Noto Sans Bengali font (base64) so Bengali PDF export works fully offline with correct glyphs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Embedded Noto Serif Bengali font (base64) so Bengali PDF export works fully offline with correct glyphs -->
     <script src="bengali-fonts.js"></script>
 
     <style>
@@ -67,7 +68,6 @@
         @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-        @keyframes rotatePhone { 0% { transform: rotate(0deg); } 25% { transform: rotate(90deg); } 50% { transform: rotate(0deg); } 75% { transform: rotate(90deg); } 100% { transform: rotate(0deg); } }
 
         .animate-fade { animation: fadeIn 0.5s ease-out forwards; }
         .animate-slide { animation: slideIn 0.4s ease-out forwards; }
@@ -343,17 +343,6 @@
         .color-picker-row label { font-size: 13px; font-weight: 600; min-width: 80px; }
         .color-picker-row input[type="color"] { width: 50px; height: 36px; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; background: none; }
 
-        .portrait-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg); z-index: 9999;
-            display: none; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center;
-        }
-        .portrait-overlay.active { display: flex; }
-        .rotate-icon { font-size: 80px; animation: rotatePhone 2s ease-in-out infinite; margin-bottom: 20px; }
-        .portrait-text { font-family: var(--font-heading); font-size: 20px; font-weight: 700; margin-bottom: 12px; }
-        .portrait-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
-        .portrait-btn { padding: 12px 28px; background: var(--primary); color: white; border: none; border-radius: 50px; font-family: var(--font-body); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .portrait-btn:hover { transform: scale(1.05); }
-
         .install-banner {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             background: var(--card-bg); border: 1.5px solid var(--primary); border-radius: var(--radius);
@@ -476,13 +465,6 @@
         <svg class="deco-leaf bottom-left" viewBox="0 0 200 200" fill="currentColor">
             <path d="M100 20 C150 20, 190 60, 190 110 C190 160, 150 200, 100 200 C50 200, 10 160, 10 110 C10 60, 50 20, 100 20 Z"/>
         </svg>
-
-        <div class="portrait-overlay" id="portraitOverlay">
-            <div class="rotate-icon">📱</div>
-            <div class="portrait-text" id="portraitTitle">দয়া করে ফোন ঘোরান</div>
-            <div class="portrait-sub" id="portraitSub">এই অ্যাপটি ভালোভাবে ব্যবহারের জন্য ল্যান্ডস্কেপ মোডে ঘোরান</div>
-            <button class="portrait-btn" id="portraitContinue">তবুও চালিয়ে যান</button>
-        </div>
 
         <header class="header">
             <div class="logo-area">
@@ -668,7 +650,6 @@ const translations = {
         customTheme: "কাস্টম থিম", primaryColor: "প্রাথমিক রঙ", backgroundColor: "ব্যাকগ্রাউন্ড রঙ",
         lightMode: "লাইট মোড", darkMode: "ডার্ক মোড", language: "ভাষা", bengaliNumerals: "বাংলা সংখ্যা",
         on: "চালু", off: "বন্ধ",
-        portraitTitle: "দয়া করে ফোন ঘোরান", portraitSub: "এই অ্যাপটি ভালোভাবে ব্যবহারের জন্য ল্যান্ডস্কেপ মোডে ঘোরান",
         continueAnyway: "তবুও চালিয়ে যান",
         installBanner: "Habit Garden ইনস্টল করুন!", installBtn: "ইনস্টল করুন",
         generatePDF: "PDF রিপোর্ট তৈরি করুন", week: "সপ্তাহ", day: "দিন", days: "দিনগুলো",
@@ -725,7 +706,6 @@ const translations = {
         customTheme: "Custom Theme", primaryColor: "Primary Color", backgroundColor: "Background Color",
         lightMode: "Light Mode", darkMode: "Dark Mode", language: "Language", bengaliNumerals: "Bengali Numerals",
         on: "On", off: "Off",
-        portraitTitle: "Please Rotate Your Phone", portraitSub: "Rotate to landscape for the best experience",
         continueAnyway: "Continue Anyway",
         installBanner: "Install Habit Garden!", installBtn: "Install",
         generatePDF: "Generate PDF Report", week: "Week", day: "Day", days: "Days",
@@ -964,7 +944,7 @@ function updateHeader() {
     const ids = ['appTitle','appSubtitle','settingsLabel','pdfLabel','newMonthLabel','installLabel',
         'ringTitle','ringLabel','calendarTitle','leaderboardTitle','weeklyChartTitle',
         'dailyTitle','weeklyTitle','monthlyTitle','addDaily','addWeekly','addMonthly',
-        'logTitle','reflectionTitle','uploadLabel','portraitTitle','portraitSub','portraitContinue',
+        'logTitle','reflectionTitle','uploadLabel',
         'installBannerText','installBannerBtn', 'authLoadingText', 'authCardSub', 'emailLabel', 'passwordLabel', 'loginBtnText', 'logoutLabel'];
     ids.forEach(id => {
         const el = document.getElementById(id);
@@ -978,7 +958,6 @@ function updateHeader() {
                 dailytitle: 'dailyHabits', weeklytitle: 'weeklyHabits', monthlytitle: 'monthlyHabits',
                 adddaily: 'add', addweekly: 'add', addmonthly: 'add',
                 logtitle: 'progressLog', reflectiontitle: 'reflection', uploadlabel: 'uploadPhoto',
-                portraittitle: 'portraitTitle', portraitsub: 'portraitSub', portraitcontinue: 'continueAnyway',
                 installbannertext: 'installBanner', installbannerbtn: 'installBtn',
                 authloadingtext: 'authLoading', authcardsub: 'authCardSub', emaillabel: 'emailLabel',
                 passwordlabel: 'passwordLabel', loginbtntext: 'loginBtnText', logoutlabel: 'logoutLabel'
@@ -1856,153 +1835,226 @@ function importBackup(e) {
     reader.readAsText(file);
 }
 
+let bengaliFontFaceInjected = false;
+function injectBengaliFontFace() {
+    if (bengaliFontFaceInjected) return;
+    bengaliFontFaceInjected = true;
+    if (!window.NOTO_BENGALI_FONT_REGULAR) return;
+    const style = document.createElement('style');
+    style.textContent = `
+        @font-face {
+            font-family: 'NotoSerifBengaliEmbedded';
+            src: url(data:font/ttf;base64,${window.NOTO_BENGALI_FONT_REGULAR}) format('truetype');
+            font-weight: 400; font-display: block;
+        }
+        @font-face {
+            font-family: 'NotoSerifBengaliEmbedded';
+            src: url(data:font/ttf;base64,${window.NOTO_BENGALI_FONT_BOLD || window.NOTO_BENGALI_FONT_REGULAR}) format('truetype');
+            font-weight: 700; font-display: block;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Builds the visual PDF report as real HTML/CSS so the browser's own text engine handles Bengali
+// conjunct/matra shaping correctly (jsPDF's native text drawing cannot do this, which is what
+// caused garbled/broken Bengali characters before). Also gives full design freedom for a modern,
+// colorful, on-brand report instead of jsPDF's plain text-and-lines output.
+function buildReportHTML(entries, days, monthName, year) {
+    const isBengali = state.currentLang === 'bn';
+    const fontFamily = isBengali ? "'NotoSerifBengaliEmbedded', 'Noto Serif Bengali', serif" : "'Poppins', 'Segoe UI', sans-serif";
+    const accents = ['#2A9D8F', '#E76F51', '#E9C46A', '#8FAE8B', '#D4A373'];
+
+    const barColor = (pct) => pct >= 70 ? '#2A9D8F' : pct >= 40 ? '#E9C46A' : '#E76F51';
+
+    let totalChecks = 0, totalPossible = 0;
+    const dailyRows = state.habits.daily.map((h, i) => {
+        const he = entries.daily[h.id] || {};
+        let checks = 0;
+        for (let d = 1; d <= days; d++) { totalPossible++; if (he[d]) { checks++; totalChecks++; } }
+        const pct = days > 0 ? Math.round((checks / days) * 100) : 0;
+        const color = barColor(pct);
+        return `
+            <div style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:#fff;border-radius:14px;margin-bottom:10px;box-shadow:0 2px 8px rgba(45,58,46,0.06);">
+                <div style="width:38px;height:38px;border-radius:50%;background:${accents[i % accents.length]}22;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🌱</div>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-size:14px;font-weight:600;color:#2D3A2E;margin-bottom:6px;">${h.name[state.currentLang]}</div>
+                    <div style="width:100%;height:8px;background:#EFEAE0;border-radius:6px;overflow:hidden;">
+                        <div style="width:${pct}%;height:100%;background:${color};border-radius:6px;"></div>
+                    </div>
+                </div>
+                <div style="text-align:right;flex-shrink:0;min-width:64px;">
+                    <div style="font-size:16px;font-weight:700;color:${color};">${toBnNum(pct)}%</div>
+                    <div style="font-size:10px;color:#8B9A8D;">${toBnNum(checks)}/${toBnNum(days)}</div>
+                </div>
+            </div>`;
+    }).join('');
+
+    const weeklyRows = state.habits.weekly.map((h, i) => {
+        const he = entries.weekly[h.id] || {};
+        let checks = 0;
+        for (let w = 1; w <= 5; w++) if (he[`week${w}`]) checks++;
+        const pct = Math.round((checks / 5) * 100);
+        const color = barColor(pct);
+        return `
+            <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:50px;padding:8px 16px;margin:0 8px 10px 0;box-shadow:0 2px 8px rgba(45,58,46,0.06);border:1.5px solid ${color}33;">
+                <span style="font-size:14px;">🗓️</span>
+                <span style="font-size:12px;font-weight:600;color:#2D3A2E;">${h.name[state.currentLang]}</span>
+                <span style="font-size:12px;font-weight:700;color:${color};">${toBnNum(checks)}/৫</span>
+            </div>`;
+    }).join('');
+
+    const monthlyRows = state.habits.monthly.map((h) => {
+        const done = !!entries.monthly[h.id];
+        return `
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:#fff;border-radius:12px;margin-bottom:8px;box-shadow:0 2px 8px rgba(45,58,46,0.06);">
+                <span style="width:22px;height:22px;border-radius:6px;background:${done ? '#2A9D8F' : '#E0DDD4'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">${done ? '✓' : '✗'}</span>
+                <span style="font-size:13px;font-weight:500;color:#2D3A2E;">${h.name[state.currentLang]}</span>
+            </div>`;
+    }).join('');
+
+    const overallPct = totalPossible > 0 ? Math.round((totalChecks / totalPossible) * 100) : 0;
+    let bestStreak = 0;
+    state.habits.daily.forEach(h => {
+        const he = entries.daily[h.id] || {};
+        let s = 0, m = 0;
+        for (let d = 1; d <= days; d++) { if (he[d]) { s++; m = Math.max(m, s); } else s = 0; }
+        bestStreak = Math.max(bestStreak, m);
+    });
+    const totalHabits = state.habits.daily.length + state.habits.weekly.length + state.habits.monthly.length;
+
+    const statCard = (icon, value, label, color) => `
+        <div style="flex:1;background:#fff;border-radius:16px;padding:18px 12px;text-align:center;box-shadow:0 2px 10px rgba(45,58,46,0.07);border-top:4px solid ${color};">
+            <div style="font-size:22px;margin-bottom:6px;">${icon}</div>
+            <div style="font-size:22px;font-weight:800;color:${color};">${value}</div>
+            <div style="font-size:10px;color:#8B9A8D;font-weight:600;margin-top:2px;">${label}</div>
+        </div>`;
+
+    const reflectionBlock = entries.reflection.text ? `
+        <div style="margin-top:8px;">
+            <div style="font-size:15px;font-weight:700;color:#2D3A2E;margin-bottom:10px;">🪞 ${t('reflection')}</div>
+            <div style="background:#fff;border-radius:14px;padding:18px 20px;box-shadow:0 2px 8px rgba(45,58,46,0.06);border-left:5px solid #D4A373;font-size:13px;line-height:1.9;color:#5C6B5E;white-space:pre-wrap;">${(entries.reflection.text || '').replace(/</g,'&lt;')}</div>
+            ${entries.reflection.photo ? `<div style="margin-top:12px;text-align:center;"><img src="${entries.reflection.photo}" style="max-width:100%;max-height:260px;border-radius:12px;box-shadow:0 4px 14px rgba(45,58,46,0.15);"/></div>` : ''}
+        </div>` : '';
+
+    return `
+    <div style="width:800px;background:#FAF7F0;font-family:${fontFamily};color:#2D3A2E;padding:0;">
+        <div style="background:linear-gradient(135deg,#6FA287 0%,#2A9D8F 55%,#22796F 100%);padding:36px 40px 44px;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.08);"></div>
+            <div style="position:absolute;bottom:-50px;left:40px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.06);"></div>
+            <div style="display:flex;align-items:center;gap:16px;position:relative;">
+                <div style="width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:30px;">🌿</div>
+                <div>
+                    <div style="font-size:28px;font-weight:800;color:#fff;letter-spacing:0.3px;">Habit Garden</div>
+                    <div style="font-size:14px;color:rgba(255,255,255,0.9);font-weight:500;margin-top:2px;">${monthName} ${toBnNum(year)}</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="padding:28px 40px 40px;">
+            <div style="display:flex;gap:14px;margin-bottom:30px;margin-top:-32px;">
+                ${statCard('🎯', toBnNum(overallPct) + '%', isBengali ? 'সামগ্রিক সম্পন্নতা' : 'Overall Completion', '#2A9D8F')}
+                ${statCard('🔥', toBnNum(bestStreak), isBengali ? 'সেরা স্ট্রিক' : 'Best Streak', '#E76F51')}
+                ${statCard('🌱', toBnNum(totalHabits), isBengali ? 'মোট অভ্যাস' : 'Total Habits', '#D4A373')}
+                ${statCard('✅', toBnNum(totalChecks), isBengali ? 'সম্পন্ন কাজ' : 'Completed', '#8FAE8B')}
+            </div>
+
+            ${state.habits.daily.length ? `
+            <div style="margin-bottom:26px;">
+                <div style="font-size:15px;font-weight:700;color:#2D3A2E;margin-bottom:12px;">🌤️ ${t('dailyHabits')}</div>
+                ${dailyRows}
+            </div>` : ''}
+
+            ${state.habits.weekly.length ? `
+            <div style="margin-bottom:26px;">
+                <div style="font-size:15px;font-weight:700;color:#2D3A2E;margin-bottom:12px;">📅 ${t('weeklyHabits')}</div>
+                <div>${weeklyRows}</div>
+            </div>` : ''}
+
+            ${state.habits.monthly.length ? `
+            <div style="margin-bottom:26px;">
+                <div style="font-size:15px;font-weight:700;color:#2D3A2E;margin-bottom:12px;">🗓️ ${t('monthlyHabits')}</div>
+                ${monthlyRows}
+            </div>` : ''}
+
+            ${reflectionBlock}
+
+            <div style="margin-top:34px;padding-top:16px;border-top:1.5px solid #E0DDD4;display:flex;justify-content:space-between;align-items:center;">
+                <div style="font-size:11px;color:#8B9A8D;font-weight:600;">🌿 Habit Garden</div>
+                <div style="font-size:11px;color:#8B9A8D;">${new Date().toLocaleDateString()}</div>
+            </div>
+        </div>
+    </div>`;
+}
+
 async function generatePDF() {
     showToast(state.currentLang === 'bn' ? 'PDF তৈরি হচ্ছে...' : 'Generating PDF...');
+    let container = null;
     try {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a4');
+        if (!window.html2canvas || !window.jspdf) {
+            throw new Error('PDF libraries not loaded');
+        }
+        injectBengaliFontFace();
+
         const entries = getEntries();
         const days = getDaysInMonth(state.currentMonth);
         const monthName = t('months')[state.currentMonth.getMonth()];
         const year = state.currentMonth.getFullYear();
-        const isBengali = state.currentLang === 'bn';
-        let fontName = 'helvetica';
-        let hasBoldVariant = true;
 
-        // Bengali needs a Unicode font with proper conjunct/shaping support registered for both
-        // normal and bold weights - jsPDF silently falls back to Helvetica (no Bengali glyphs,
-        // producing garbled boxes/weird characters) if a requested weight isn't registered.
-        if (isBengali) {
-            try {
-                if (window.NOTO_BENGALI_FONT_REGULAR) {
-                    doc.addFileToVFS('NotoSansBengali-Regular.ttf', window.NOTO_BENGALI_FONT_REGULAR);
-                    doc.addFont('NotoSansBengali-Regular.ttf', 'NotoSansBengali', 'normal');
-                    fontName = 'NotoSansBengali';
-                }
-                if (window.NOTO_BENGALI_FONT_BOLD) {
-                    doc.addFileToVFS('NotoSansBengali-Bold.ttf', window.NOTO_BENGALI_FONT_BOLD);
-                    doc.addFont('NotoSansBengali-Bold.ttf', 'NotoSansBengali', 'bold');
-                } else {
-                    hasBoldVariant = false;
-                }
-                if (fontName === 'helvetica') {
-                    console.warn('Bengali font data not found; falling back to Helvetica (Bengali text will not render correctly).');
-                }
-            } catch (fontErr) {
-                console.warn('Could not register Bengali font, using fallback:', fontErr);
-                fontName = 'helvetica';
-            }
+        container = document.createElement('div');
+        container.style.position = 'fixed';
+        container.style.left = '-99999px';
+        container.style.top = '0';
+        container.style.zIndex = '-1';
+        container.innerHTML = buildReportHTML(entries, days, monthName, year);
+        document.body.appendChild(container);
+
+        // Wait for the embedded Bengali font (and any other webfonts) to actually be ready
+        // before rasterizing, otherwise html2canvas can capture a frame with fallback/tofu glyphs.
+        if (document.fonts && document.fonts.ready) {
+            await document.fonts.ready;
         }
+        // Give the browser a moment to finish layout/paint of the freshly-injected content.
+        await new Promise(r => setTimeout(r, 150));
 
-        const PAGE_BOTTOM = 280;
-        const addFooter = () => {
-            doc.setFontSize(8);
-            doc.setTextColor(150);
-            doc.setFont('helvetica', 'normal');
-            doc.text(`Habit Garden - ${new Date().toLocaleDateString()}`, 105, 290, { align: 'center' });
-        };
-        // Ensures long habit lists start a new page instead of silently running off the bottom.
-        const ensureSpace = (neededY) => {
-            if (neededY > PAGE_BOTTOM) {
-                addFooter();
-                doc.addPage();
-                return 20;
-            }
-            return neededY;
-        };
-
-        const addText = (text, x, y, opts = {}) => {
-            doc.setFontSize(opts.size || 12);
-            doc.setTextColor(opts.color || '#2D3A2E');
-            // Only request the 'bold' style when it's actually registered for this font,
-            // otherwise jsPDF silently substitutes a font without Bengali glyphs.
-            const style = (opts.bold && (fontName !== 'NotoSansBengali' || hasBoldVariant)) ? 'bold' : 'normal';
-            doc.setFont(fontName, style);
-            doc.text(text, x, y);
-        };
-
-        doc.setFillColor(143, 174, 139);
-        doc.rect(0, 0, 210, 40, 'F');
-        addText('Habit Garden', 105, 25, { size: 24, bold: true, color: '#FFFFFF' });
-        addText(`${monthName} ${year}`, 105, 35, { size: 14, color: '#FFFFFF' });
-
-        let y = 55;
-        let totalChecks = 0, totalPossible = 0;
-        state.habits.daily.forEach(h => {
-            const he = entries.daily[h.id] || {};
-            for (let d = 1; d <= days; d++) {
-                totalPossible++;
-                if (he[d]) totalChecks++;
-            }
-        });
-        const overallPct = totalPossible > 0 ? Math.round((totalChecks/totalPossible)*100) : 0;
-        addText(`${t('overall')} ${t('completion')}: ${overallPct}%`, 20, y, { size: 16, bold: true });
-        y += 15;
-
-        addText(t('dailyHabits'), 20, y, { size: 14, bold: true });
-        y += 10;
-        doc.setDrawColor(200);
-        doc.line(20, y, 190, y);
-        y += 5;
-        state.habits.daily.forEach(h => {
-            y = ensureSpace(y);
-            const he = entries.daily[h.id] || {};
-            let checks = 0;
-            for (let d = 1; d <= days; d++) if (he[d]) checks++;
-            const pct = Math.round((checks/days)*100);
-            addText(`${h.name[state.currentLang]}: ${checks}/${days} (${pct}%)`, 20, y);
-            y += 8;
+        const canvas = await window.html2canvas(container.firstElementChild, {
+            scale: 2,
+            backgroundColor: '#FAF7F0',
+            useCORS: true,
+            logging: false
         });
 
-        y += 10;
-        y = ensureSpace(y);
-        addText(t('weeklyHabits'), 20, y, { size: 14, bold: true });
-        y += 10;
-        doc.line(20, y, 190, y);
-        y += 5;
-        state.habits.weekly.forEach(h => {
-            y = ensureSpace(y);
-            const he = entries.weekly[h.id] || {};
-            let checks = 0;
-            for (let w = 1; w <= 5; w++) if (he[`week${w}`]) checks++;
-            const pct = Math.round((checks/5)*100);
-            addText(`${h.name[state.currentLang]}: ${checks}/5 (${pct}%)`, 20, y);
-            y += 8;
-        });
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
+        const pdfWidth = 210, pdfHeight = 297;
+        const pxPerMm = canvas.width / pdfWidth;
+        const pageHeightPx = pdfHeight * pxPerMm;
 
-        y += 10;
-        y = ensureSpace(y);
-        addText(t('monthlyHabits'), 20, y, { size: 14, bold: true });
-        y += 10;
-        doc.line(20, y, 190, y);
-        y += 5;
-        state.habits.monthly.forEach(h => {
-            y = ensureSpace(y);
-            const checked = entries.monthly[h.id] ? '✓' : '✗';
-            addText(`${h.name[state.currentLang]}: ${checked}`, 20, y);
-            y += 8;
-        });
-
-        y += 10;
-        if (entries.reflection.text) {
-            y = ensureSpace(y);
-            addText(t('reflection'), 20, y, { size: 14, bold: true });
-            y += 10;
-            const splitText = doc.splitTextToSize(entries.reflection.text, 170);
-            splitText.forEach(line => {
-                y = ensureSpace(y);
-                addText(line, 20, y, { size: 10 });
-                y += 5;
-            });
+        let renderedPx = 0;
+        let pageNum = 0;
+        while (renderedPx < canvas.height) {
+            const sliceHeightPx = Math.min(pageHeightPx, canvas.height - renderedPx);
+            const pageCanvas = document.createElement('canvas');
+            pageCanvas.width = canvas.width;
+            pageCanvas.height = sliceHeightPx;
+            const ctx = pageCanvas.getContext('2d');
+            ctx.fillStyle = '#FAF7F0';
+            ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+            ctx.drawImage(canvas, 0, renderedPx, canvas.width, sliceHeightPx, 0, 0, canvas.width, sliceHeightPx);
+            const pageData = pageCanvas.toDataURL('image/jpeg', 0.95);
+            if (pageNum > 0) doc.addPage();
+            doc.addImage(pageData, 'JPEG', 0, 0, pdfWidth, sliceHeightPx / pxPerMm);
+            renderedPx += sliceHeightPx;
+            pageNum++;
         }
-
-        addFooter();
 
         doc.save(`HabitReport-${monthName}-${year}.pdf`);
         showToast(t('pdfGenerated'));
     } catch (err) {
         console.error('PDF generation error:', err);
         showToast(state.currentLang === 'bn' ? 'PDF তৈরিতে সমস্যা হয়েছে' : 'Error generating PDF');
+    } finally {
+        if (container && container.parentNode) container.parentNode.removeChild(container);
     }
 }
 
@@ -2036,18 +2088,6 @@ function installApp() {
 function dismissInstall() {
     const instBanner = document.getElementById('installBanner');
     if (instBanner) instBanner.classList.remove('active');
-}
-
-function checkOrientation() {
-    const overlay = document.getElementById('portraitOverlay');
-    if (!overlay) return;
-    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-    const isMobile = window.innerWidth < 768;
-    if (isPortrait && isMobile) {
-        overlay.classList.add('active');
-    } else {
-        overlay.classList.remove('active');
-    }
 }
 
 // Click-and-drag horizontal scrolling for mouse users. Touchscreens and trackpads can already
@@ -2099,23 +2139,6 @@ function initDragScrollAreas() {
     selectors.forEach(sel => {
         document.querySelectorAll(sel).forEach(enableDragScroll);
     });
-}
-
-const continueBtn = document.getElementById('portraitContinue');
-if (continueBtn) {
-    continueBtn.addEventListener('click', () => {
-        const overlay = document.getElementById('portraitOverlay');
-        if (overlay) overlay.classList.remove('active');
-    });
-}
-
-window.addEventListener('resize', checkOrientation);
-window.addEventListener('orientationchange', checkOrientation);
-
-if (screen.orientation && screen.orientation.lock) {
-    document.addEventListener('click', () => {
-        screen.orientation.lock('landscape').catch(() => {});
-    }, { once: true });
 }
 
 function switchTab(tab) {
@@ -2231,7 +2254,6 @@ function loadState() {
 window.addEventListener('DOMContentLoaded', () => {
     loadState();
     initFileSync();
-    checkOrientation();
     const reflText = document.getElementById('reflectionText');
     if (reflText) {
         reflText.addEventListener('input', function() {
