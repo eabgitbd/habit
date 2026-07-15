@@ -1,5 +1,5 @@
 // Habit Garden Service Worker
-const CACHE_NAME = 'habit-garden-v4';
+const CACHE_NAME = 'habit-garden-v5';
 const STATIC_ASSETS = [
   './',
   './index.html',
