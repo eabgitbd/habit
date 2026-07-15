@@ -123,7 +123,7 @@
 
         .dashboard-grid { display: grid; grid-template-columns: 280px 1fr 300px; gap: 20px; margin-bottom: 20px; }
         
-        /* CRITICAL FIX: Prevent CSS Grid blowout on mobile/small screens */
+        /* FIX: Prevent CSS Grid blowout on mobile/small screens */
         .left-col, .center-col, .right-col { min-width: 0; max-width: 100%; }
         
         @media (max-width: 1200px) { .dashboard-grid { grid-template-columns: 1fr 1fr; } }
@@ -145,6 +145,23 @@
             display: flex; align-items: center; justify-content: center; color: white; font-size: 14px;
         }
 
+        .weekly-progress-container { display: flex; flex-direction: column; gap: 16px; width: 100%; overflow: hidden; }
+        .weekly-progress-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--border); }
+        .weekly-progress-item:last-child { border-bottom: none; }
+        .week-ring-box { width: 54px; height: 54px; position: relative; flex-shrink: 0; }
+        .week-ring-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+        .week-ring-bg { fill: none; stroke: var(--border); stroke-width: 6; }
+        .week-ring-fill { fill: none; stroke: var(--primary); stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.8s ease-out; }
+        .week-ring-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--text); font-family: var(--font-heading); }
+        
+        .week-label { font-size: 13px; font-weight: 600; color: var(--text-secondary); width: 60px; flex-shrink: 0; }
+        .week-chart-area { flex: 1; height: 50px; position: relative; min-width: 100px; }
+        .week-chart-svg { width: 100%; height: 100%; overflow: visible; }
+        .week-chart-poly { fill: var(--primary); opacity: 0.15; transition: all 0.5s; }
+        .week-chart-line { fill: none; stroke: var(--primary); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+        .week-chart-dot { fill: var(--card-bg); stroke: var(--primary); stroke-width: 2; transition: all 0.2s; }
+        .week-chart-dot:hover { r: 5; fill: var(--primary); cursor: pointer; }
+
         .progress-ring-container { display: flex; flex-direction: column; align-items: center; padding: 10px 0; }
         .progress-ring {
             position: relative; width: 180px; height: 180px;
@@ -165,20 +182,6 @@
         }
         .progress-ring-value { font-family: var(--font-heading); font-size: 36px; font-weight: 700; color: var(--primary); line-height: 1; }
         .progress-ring-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
-
-        .week-chart { margin-bottom: 16px; }
-        .week-chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .week-chart-label { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
-        .week-chart-value { font-size: 13px; font-weight: 700; color: var(--primary); }
-        .week-bars { display: flex; gap: 4px; height: 40px; align-items: flex-end; overflow-x: auto; -webkit-overflow-scrolling: touch; touch-action: pan-x pan-y; }
-        .day-bar {
-            flex: 1; border-radius: 6px 6px 0 0; min-height: 4px;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative; cursor: pointer;
-        }
-        .day-bar:hover { filter: brightness(1.1); transform: scaleY(1.05); }
-        .day-bar-label { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); font-size: 10px; color: var(--text-muted); font-weight: 600; white-space: nowrap; }
-        .day-bar-tooltip { position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--text); color: white; padding: 4px 8px; border-radius: 6px; font-size: 11px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 10; }
-        .day-bar:hover .day-bar-tooltip { opacity: 1; }
 
         .habit-section { margin-bottom: 24px; }
         .habit-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
@@ -226,9 +229,9 @@
         }
         .daily-habits-scroll-container.drag-scrolling,
         .progress-log-scroll.drag-scrolling,
-        .week-bars.drag-scrolling,
         .mobile-tabs.drag-scrolling { cursor: grabbing; scroll-behavior: auto; user-select: none; }
-        .progress-log-scroll, .week-bars { cursor: grab; }
+        .progress-log-scroll { cursor: grab; }
+        
         @media (max-width: 768px) {
             .daily-habits-scroll-container { scroll-snap-type: x proximity; }
             .daily-habits-scroll-container table th,
@@ -557,7 +560,7 @@
                             <span class="icon">📊</span>
                             <span id="weeklyChartTitle">সাপ্তাহিক অগ্রগতি</span>
                         </div>
-                        <div id="weeklyCharts"></div>
+                        <div id="weeklyCharts" class="weekly-progress-container"></div>
                     </div>
                     <div class="card animate-fade" id="card-daily">
                         <div class="habit-section-header">
@@ -679,7 +682,7 @@ const translations = {
         months: ["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন","জুলাই","অগাস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"],
         tips: [
             "প্রতিদিন ছোট ছোট পদক্ষেপ বড় পরিবর্তন আনে!",
-            "আজকের কাজ কালকে ছাড়বেন না!",
+            "আজকের কাজ কালকে ছাড়বেন ভাবনা নেই!",
             "ধৈর্য ধরুন, ফল পাবেন!",
             "নিয়মিততাই সাফল্যের চাবিকাঠি!",
             "নিজেকে বিশ্বাস করুন, আপনি পারবেন!",
@@ -759,10 +762,11 @@ const translations = {
 
 let state = {
     currentLang: 'bn',
-    currentMonth: new Date(2026, 6, 1),
+    currentMonth: new Date(2026, 6, 1), // July 2026
     currentTab: 'overview',
     habits: {
         daily: [
+            // Removed Meditation Task as per user request
             { id: 'h2', name: { bn: '২ লিটার পানি পান', en: 'Drink 2L water' }, goal: 30 },
             { id: 'h3', name: { bn: '৩০ মিনিট হাঁটা', en: 'Walk 30 min' }, goal: 30 },
             { id: 'h4', name: { bn: 'বই পড়া', en: 'Read a book' }, goal: 30 },
@@ -788,12 +792,7 @@ let state = {
         customColors: { primary: '#8FAE8B', background: '#F6F3EA', accent: '#A8C4A4' }
     },
     installPrompt: null,
-    fileSync: {
-        enabled: false,
-        directoryHandle: null,
-        lastSync: null,
-        autoSync: true
-    }
+    fileSync: { enabled: false, directoryHandle: null, lastSync: null, autoSync: true }
 };
 
 const year = 2026;
@@ -805,16 +804,17 @@ state.entries[monthKey] = {
     reflection: { text: '', photo: null }
 };
 
+// Seed random data for visual demo
 state.habits.daily.forEach(h => {
     state.entries[monthKey].daily[h.id] = {};
-    for (let d = 1; d <= 14; d++) {
+    for (let d = 1; d <= 25; d++) {
         state.entries[monthKey].daily[h.id][d] = Math.random() > 0.3;
     }
 });
 
 state.habits.weekly.forEach(h => {
     state.entries[monthKey].weekly[h.id] = {};
-    for (let w = 1; w <= 2; w++) {
+    for (let w = 1; w <= 3; w++) {
         state.entries[monthKey].weekly[h.id][`week${w}`] = Math.random() > 0.3;
     }
 });
@@ -1003,12 +1003,8 @@ function idbRequestToPromise(request) {
 async function restoreDirectoryHandle() {
     try {
         const db = await openIndexedDB('HabitGardenDB', 2, (db) => {
-            if (!db.objectStoreNames.contains('sync')) {
-                db.createObjectStore('sync');
-            }
-            if (!db.objectStoreNames.contains('photos')) {
-                db.createObjectStore('photos');
-            }
+            if (!db.objectStoreNames.contains('sync')) db.createObjectStore('sync');
+            if (!db.objectStoreNames.contains('photos')) db.createObjectStore('photos');
         });
         const tx = db.transaction('sync', 'readonly');
         const store = tx.objectStore('sync');
@@ -1046,12 +1042,8 @@ function openIndexedDB(name, version, upgradeCallback) {
 async function saveDirectoryHandle(handle) {
     try {
         const db = await openIndexedDB('HabitGardenDB', 2, (db) => {
-            if (!db.objectStoreNames.contains('sync')) {
-                db.createObjectStore('sync');
-            }
-            if (!db.objectStoreNames.contains('photos')) {
-                db.createObjectStore('photos');
-            }
+            if (!db.objectStoreNames.contains('sync')) db.createObjectStore('sync');
+            if (!db.objectStoreNames.contains('photos')) db.createObjectStore('photos');
         });
         const tx = db.transaction('sync', 'readwrite');
         const store = tx.objectStore('sync');
@@ -1128,9 +1120,7 @@ async function loadFromFileSystem() {
         state.fileSync.lastSync = new Date().toISOString();
         updateSyncStatus();
     } catch (e) {
-        if (e.name !== 'NotFoundError') {
-            console.error('File system load error:', e);
-        }
+        if (e.name !== 'NotFoundError') console.error('File system load error:', e);
     }
 }
 
@@ -1245,14 +1235,12 @@ function renderWeeklyCharts() {
     const days = getDaysInMonth(state.currentMonth);
     const container = document.getElementById('weeklyCharts');
     if (!container) return;
+    
     container.innerHTML = '';
-    const weekColors = [state.settings.theme === 'midnightBloom' ? '#2A9D8F' : '#8FAE8B', '#D4A373', '#E9C46A', '#2A9D8F', '#E76F51'];
-    const dayNames = [t('su'), t('mo'), t('tu'), t('we'), t('th'), t('fr'), t('sa')];
+    
     for (let w = 1; w <= 5; w++) {
-        const weekDiv = document.createElement('div');
-        weekDiv.className = 'week-chart';
         let weekChecks = 0, weekTotal = 0;
-        const dayBars = [];
+        const weekData = [];
         for (let d = (w-1)*7 + 1; d <= Math.min(w*7, days); d++) {
             let dayChecks = 0;
             state.habits.daily.forEach(h => {
@@ -1260,27 +1248,52 @@ function renderWeeklyCharts() {
                 const he = entries.daily[h.id] || {};
                 if (he[d]) { dayChecks++; weekChecks++; }
             });
-            const dayPct = state.habits.daily.length > 0 ? (dayChecks / state.habits.daily.length) * 100 : 0;
-            const dayName = dayNames[(new Date(state.currentMonth.getFullYear(), state.currentMonth.getMonth(), d).getDay())];
-            dayBars.push({ pct: dayPct, name: dayName, checks: dayChecks, total: state.habits.daily.length });
+            weekData.push(state.habits.daily.length > 0 ? (dayChecks / state.habits.daily.length) * 100 : 0);
         }
+        
         if (weekTotal === 0) continue;
         const weekPct = Math.round((weekChecks / weekTotal) * 100);
-        weekDiv.innerHTML = `
-            <div class="week-chart-header">
-                <span class="week-chart-label">${t('week')} ${toBnNum(w)}</span>
-                <span class="week-chart-value">${toBnNum(weekPct)}%</span>
+        
+        // Ring calculations
+        const ringRadius = 24;
+        const circumference = 2 * Math.PI * ringRadius;
+        const offset = circumference - (circumference * weekPct / 100);
+
+        // Chart calculations
+        const maxVal = 100;
+        const points = weekData.map((val, i) => {
+            const x = (i / (weekData.length - 1)) * 100;
+            const y = 50 - (val / maxVal * 40); // Leave some padding
+            return `${x},${y}`;
+        });
+        
+        const linePoints = points.join(' ');
+        const polyPoints = `0,50 ${linePoints} 100,50`;
+
+        const item = document.createElement('div');
+        item.className = 'weekly-progress-item';
+        item.innerHTML = `
+            <div class="week-ring-box">
+                <svg class="week-ring-svg">
+                    <circle class="week-ring-bg" cx="27" cy="27" r="24"></circle>
+                    <circle class="week-ring-fill" cx="27" cy="27" r="24" style="stroke-dasharray:${circumference}; stroke-dashoffset:${offset}"></circle>
+                </svg>
+                <div class="week-ring-text">${toBnNum(weekPct)}%</div>
             </div>
-            <div class="week-bars">
-                ${dayBars.map(b => `
-                    <div class="day-bar" style="height:${Math.max(b.pct, 4)}%; background:${weekColors[w-1]}">
-                        <div class="day-bar-tooltip">${b.name}: ${toBnNum(Math.round(b.pct))}%</div>
-                        <div class="day-bar-label">${b.name}</div>
-                    </div>
-                `).join('')}
+            <div class="week-label">${t('week')} ${toBnNum(w)}</div>
+            <div class="week-chart-area">
+                <svg class="week-chart-svg" preserveAspectRatio="none" viewBox="0 0 100 50">
+                    <polygon class="week-chart-poly" points="${polyPoints}" />
+                    <polyline class="week-chart-line" points="${linePoints}" />
+                    ${weekData.map((val, i) => {
+                        const x = (i / (weekData.length - 1)) * 100;
+                        const y = 50 - (val / maxVal * 40);
+                        return `<circle class="week-chart-dot" cx="${x}" cy="${y}" r="3" />`;
+                    }).join('')}
+                </svg>
             </div>
         `;
-        container.appendChild(weekDiv);
+        container.appendChild(item);
     }
 }
 
@@ -1856,362 +1869,230 @@ function injectBengaliFontFace() {
     document.head.appendChild(style);
 }
 
+// Landscape Dashboard PDF HTML Builder
 function buildReportHTML(entries, days, monthName, year) {
     const isBengali = state.currentLang === 'bn';
     const fontFamily = isBengali ? "'NotoSerifBengaliEmbedded', 'Noto Serif Bengali', serif" : "'Poppins', 'Segoe UI', sans-serif";
-    
-    // Custom Colors matching the professional dashboard theme
-    const theme = {
-        primary: '#2A9D8F',
-        success: '#4CAF50',
-        warning: '#FF9800',
-        danger: '#F44336',
-        bg: '#F4F7F6',
-        cardBg: '#FFFFFF',
-        text: '#1E293B',
-        textMuted: '#64748B',
-        border: '#E2E8F0',
-        lightGreen: '#E8F5E9'
-    };
+    const primary = state.settings.theme === 'midnightBloom' ? '#2A9D8F' : '#8FAE8B';
 
-    const getStatusColor = (pct) => pct >= 70 ? theme.success : pct >= 40 ? theme.warning : theme.danger;
-    const getStatusText = (pct) => {
-        if(pct >= 70) return isBengali ? 'চমৎকার' : 'Excellent';
-        if(pct >= 40) return isBengali ? 'মাঝারি' : 'Moderate';
-        return isBengali ? 'উন্নতি প্রয়োজন' : 'Needs Work';
-    };
-
-    // Calculate massive stats for Dashboard
-    let totalPossible = 0, totalCompleted = 0;
-    let dayStats = Array(days + 1).fill().map(() => ({ possible: 0, completed: 0 }));
-    let weekStats = Array(6).fill().map(() => ({ possible: 0, completed: 0 }));
-    let habitRankings = [];
-
-    // Process Daily
-    const dailyRows = state.habits.daily.map((h) => {
+    // Calculate Core Metrics
+    let totalChecks = 0, totalPossible = 0;
+    const dailyStats = [];
+    state.habits.daily.forEach(h => {
         const he = entries.daily[h.id] || {};
         let checks = 0, maxStreak = 0, currentStreak = 0;
         for (let d = 1; d <= days; d++) {
             totalPossible++;
-            dayStats[d].possible++;
             if (he[d]) {
-                checks++;
-                totalCompleted++;
-                dayStats[d].completed++;
-                currentStreak++;
-                maxStreak = Math.max(maxStreak, currentStreak);
-            } else {
-                currentStreak = 0;
-            }
+                checks++; totalChecks++;
+                currentStreak++; maxStreak = Math.max(maxStreak, currentStreak);
+            } else { currentStreak = 0; }
         }
-        const pct = days > 0 ? Math.round((checks / days) * 100) : 0;
-        habitRankings.push({ name: h.name[state.currentLang], pct, checks, target: days });
-        const color = getStatusColor(pct);
-        
-        return `
-            <tr style="border-bottom: 1px solid ${theme.border};">
-                <td style="padding:10px 8px; font-weight:500; font-size:12px;">${h.name[state.currentLang]}</td>
-                <td style="padding:10px 8px; text-align:center; font-size:12px;">${toBnNum(days)}</td>
-                <td style="padding:10px 8px; text-align:center; font-size:12px;">${toBnNum(checks)}</td>
-                <td style="padding:10px 8px; text-align:center; font-size:12px;">${toBnNum(days - checks)}</td>
-                <td style="padding:10px 8px;">
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <div style="flex:1; height:6px; background:${theme.border}; border-radius:3px; overflow:hidden;">
-                            <div style="width:${pct}%; height:100%; background:${color};"></div>
-                        </div>
-                        <span style="font-size:11px; font-weight:600; width:30px;">${toBnNum(pct)}%</span>
-                    </div>
-                </td>
-                <td style="padding:10px 8px; text-align:center; font-size:12px;">${toBnNum(maxStreak)}</td>
-            </tr>`;
-    }).join('');
+        const pct = Math.round((checks / days) * 100) || 0;
+        dailyStats.push({ name: h.name[state.currentLang], checks, days, pct, maxStreak, currentStreak });
+    });
+    const overallPct = totalPossible > 0 ? Math.round((totalChecks / totalPossible) * 100) : 0;
+    const totalHabits = state.habits.daily.length + state.habits.weekly.length + state.habits.monthly.length;
 
-    // Process Weekly
+    // Daily Table Rows
+    const dailyRows = dailyStats.map(stat => `
+        <tr style="border-bottom:1px solid #eee;">
+            <td style="padding:10px;font-weight:600;">${stat.name}</td>
+            <td style="padding:10px;text-align:center;">${toBnNum(stat.days)}</td>
+            <td style="padding:10px;text-align:center;">${toBnNum(stat.checks)}</td>
+            <td style="padding:10px;text-align:center;">${toBnNum(stat.days - stat.checks)}</td>
+            <td style="padding:10px;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <div style="flex:1;height:6px;background:#eee;border-radius:3px;"><div style="height:100%;width:${stat.pct}%;background:${primary};border-radius:3px;"></div></div>
+                    <span style="font-size:12px;font-weight:700;">${toBnNum(stat.pct)}%</span>
+                </div>
+            </td>
+            <td style="padding:10px;text-align:center;">${toBnNum(stat.maxStreak)}</td>
+        </tr>
+    `).join('');
+
+    // Weekly Table Rows (with visual status dots)
     const weeklyRows = state.habits.weekly.map((h) => {
         const he = entries.weekly[h.id] || {};
         let checks = 0;
+        let weekDots = '';
         for (let w = 1; w <= 5; w++) {
-            totalPossible++;
-            weekStats[w].possible++;
             if (he[`week${w}`]) {
                 checks++;
-                totalCompleted++;
-                weekStats[w].completed++;
+                weekDots += `<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${primary};margin-right:4px;"></span>`;
+            } else {
+                weekDots += `<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#eee;margin-right:4px;"></span>`;
             }
         }
         const pct = Math.round((checks / 5) * 100);
-        habitRankings.push({ name: h.name[state.currentLang], pct, checks, target: 5 });
         return `
-            <tr style="border-bottom: 1px solid ${theme.border};">
-                <td style="padding:10px 8px; font-weight:500; font-size:12px;">${h.name[state.currentLang]}</td>
-                <td style="padding:10px 8px; text-align:center; font-size:12px;">৫</td>
-                <td style="padding:10px 8px; text-align:center; font-size:12px;">${toBnNum(checks)}</td>
-                <td style="padding:10px 8px;">
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <div style="flex:1; height:6px; background:${theme.border}; border-radius:3px; overflow:hidden;">
-                            <div style="width:${pct}%; height:100%; background:${getStatusColor(pct)};"></div>
-                        </div>
-                        <span style="font-size:11px; font-weight:600; width:30px;">${toBnNum(pct)}%</span>
-                    </div>
-                </td>
-                <td style="padding:10px 8px; text-align:center; font-size:11px; font-weight:600; color:${getStatusColor(pct)}">${getStatusText(pct)}</td>
-            </tr>`;
+        <tr style="border-bottom:1px solid #eee;">
+            <td style="padding:10px;font-weight:600;">${h.name[state.currentLang]}</td>
+            <td style="padding:10px;text-align:center;">${toBnNum(checks)}</td>
+            <td style="padding:10px;text-align:center;font-weight:700;color:${primary};">${toBnNum(pct)}%</td>
+            <td style="padding:10px;text-align:center;">${weekDots}</td>
+        </tr>`;
     }).join('');
 
-    // Process Monthly
+    // Monthly Table Rows
     const monthlyRows = state.habits.monthly.map((h) => {
-        totalPossible++;
         const done = !!entries.monthly[h.id];
-        if(done) totalCompleted++;
-        const pct = done ? 100 : 0;
-        habitRankings.push({ name: h.name[state.currentLang], pct, checks: done?1:0, target: 1 });
         return `
-            <tr style="border-bottom: 1px solid ${theme.border};">
-                <td style="padding:10px 8px; font-weight:500; font-size:12px;">${h.name[state.currentLang]}</td>
-                <td style="padding:10px 8px; text-align:center; font-size:12px;">১</td>
-                <td style="padding:10px 8px; text-align:center; font-size:12px;">${toBnNum(done?1:0)}</td>
-                <td style="padding:10px 8px; text-align:center; font-size:11px; font-weight:600; color:${done ? theme.success : theme.danger}">${done ? (isBengali ? 'সম্পন্ন' : 'Completed') : (isBengali ? 'অসম্পন্ন' : 'Missed')}</td>
-            </tr>`;
+        <tr style="border-bottom:1px solid #eee;">
+            <td style="padding:10px;font-weight:600;">${h.name[state.currentLang]}</td>
+            <td style="padding:10px;text-align:center;">${toBnNum(1)}</td>
+            <td style="padding:10px;text-align:center;">${done ? toBnNum(1) : toBnNum(0)}</td>
+            <td style="padding:10px;text-align:center;"><span style="padding:4px 8px;border-radius:20px;font-size:11px;font-weight:700;background:${done?'#E8F5E9':'#FFEBEE'};color:${done?'#2E7D32':'#C62828'};">${done ? (isBengali?'সম্পন্ন':'Completed') : (isBengali?'অসম্পূর্ণ':'Missed')}</span></td>
+        </tr>`;
     }).join('');
 
-    // Aggregate Stats
-    const overallPct = totalPossible > 0 ? Math.round((totalCompleted / totalPossible) * 100) : 0;
-    
-    let bestDayIdx = 1, worstDayIdx = 1, maxDayPct = -1, minDayPct = 101;
-    for(let d=1; d<=days; d++) {
-        if(dayStats[d].possible > 0) {
-            let p = (dayStats[d].completed / dayStats[d].possible) * 100;
-            if(p > maxDayPct) { maxDayPct = p; bestDayIdx = d; }
-            if(p < minDayPct) { minDayPct = p; worstDayIdx = d; }
-        }
-    }
-
-    let bestWeekIdx = 1, maxWeekPct = -1;
-    for(let w=1; w<=5; w++) {
-        if(weekStats[w].possible > 0) {
-            let p = (weekStats[w].completed / weekStats[w].possible) * 100;
-            if(p > maxWeekPct) { maxWeekPct = p; bestWeekIdx = w; }
-        }
-    }
-
-    habitRankings.sort((a,b) => b.pct - a.pct);
-    let mostConsistent = habitRankings.length ? habitRankings[0].name : '-';
-    let leastConsistent = habitRankings.length ? habitRankings[habitRankings.length-1].name : '-';
-
-    // Calendar Heatmap Generation
+    // Calendar Heatmap Grid
     const firstDay = new Date(year, state.currentMonth.getMonth(), 1).getDay();
+    let calendarCells = '';
     const dayNames = [t('su'), t('mo'), t('tu'), t('we'), t('th'), t('fr'), t('sa')];
-    let calendarHtml = `<div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; margin-top:12px;">`;
-    dayNames.forEach(d => { calendarHtml += `<div style="text-align:center; font-size:11px; font-weight:600; color:${theme.textMuted}; padding-bottom:4px;">${d}</div>`; });
-    for (let i = 0; i < firstDay; i++) calendarHtml += `<div></div>`;
+    dayNames.forEach(d => { calendarCells += `<div style="text-align:center;font-size:11px;font-weight:700;color:#8B9A8D;padding:4px;">${d}</div>`; });
+    for (let i = 0; i < firstDay; i++) { calendarCells += `<div></div>`; }
     for (let d = 1; d <= days; d++) {
-        let pct = dayStats[d].possible > 0 ? Math.round((dayStats[d].completed / dayStats[d].possible)*100) : 0;
-        let bg = pct >= 75 ? theme.success : pct >= 50 ? '#81C784' : pct >= 25 ? '#FFCC80' : pct > 0 ? '#EF9A9A' : '#F1F5F9';
-        let color = pct >= 25 && pct < 75 ? '#000' : (pct>0 ? '#fff' : theme.textMuted);
-        calendarHtml += `<div style="aspect-ratio:1; display:flex; align-items:center; justify-content:center; background:${bg}; color:${color}; font-size:12px; font-weight:600; border-radius:4px;">${toBnNum(d)}</div>`;
-    }
-    calendarHtml += `</div>`;
-
-    const svgRing = (pct, size, stroke) => `
-        <svg viewBox="0 0 36 36" style="width:${size}px; height:${size}px;">
-            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="${theme.border}" stroke-width="${stroke}"/>
-            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="${theme.primary}" stroke-width="${stroke}" stroke-dasharray="${pct}, 100" stroke-linecap="round" />
-        </svg>
-    `;
-
-    // Inline CSS for reliable rendering in PDF
-    const styleBlock = `
-        <style>
-            .pdf-container { width: 1680px; padding: 40px; background: ${theme.bg}; font-family: ${fontFamily}; color: ${theme.text}; box-sizing: border-box; }
-            .pdf-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 2px solid ${theme.border}; }
-            .pdf-title-area h1 { font-size: 38px; font-weight: 800; margin: 0 0 8px 0; color: ${theme.text}; line-height: 1.2; }
-            .pdf-title-area p { font-size: 16px; color: ${theme.textMuted}; margin: 0; }
-            .pdf-grid { display: grid; grid-template-columns: 360px 1fr; gap: 24px; }
-            .pdf-card { background: ${theme.cardBg}; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid ${theme.border}; }
-            .pdf-card-title { font-size: 16px; font-weight: 700; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px; color: ${theme.text}; }
-            .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-            .stat-box { display: flex; align-items: center; gap: 12px; }
-            .stat-icon { width: 36px; height: 36px; border-radius: 8px; background: ${theme.lightGreen}; color: ${theme.primary}; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-            .stat-val { font-size: 18px; font-weight: 700; color: ${theme.text}; line-height: 1.2; }
-            .stat-label { font-size: 11px; color: ${theme.textMuted}; font-weight: 500; }
-            .main-grid-3 { display: grid; grid-template-columns: 1.2fr 1fr 1.2fr; gap: 24px; margin-bottom: 24px; }
-            .main-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-            .pdf-table { width: 100%; border-collapse: collapse; text-align: left; }
-            .pdf-table th { padding: 8px; font-size: 11px; font-weight: 600; color: ${theme.textMuted}; border-bottom: 2px solid ${theme.border}; text-transform: uppercase; }
-        </style>
-    `;
-
-    return `
-    <div class="pdf-container">
-        ${styleBlock}
+        let checks = 0, total = state.habits.daily.length;
+        state.habits.daily.forEach(h => { if (entries.daily[h.id] && entries.daily[h.id][d]) checks++; });
+        let pct = total > 0 ? (checks/total)*100 : 0;
+        let bg = '#F6F3EA';
+        if (pct >= 100) bg = primary;
+        else if (pct >= 50) bg = `${primary}88`; // half opacity
+        else if (pct > 0) bg = `${primary}44`;   // low opacity
         
-        <div class="pdf-header">
-            <div class="pdf-title-area" style="display:flex; align-items:center; gap:20px;">
-                <div style="width:72px; height:72px; background:${theme.primary}; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:36px; color:#fff; box-shadow:0 8px 16px rgba(42,157,143,0.3);">🌿</div>
-                <div>
-                    <h1>${isBengali ? 'মাসিক অভ্যাস প্রগ্রেস রিপোর্ট' : 'Monthly Habit Progress Report'}</h1>
-                    <p>Habit Tracker Dashboard &bull; ${monthName} ${toBnNum(year)}</p>
+        calendarCells += `<div style="aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:${bg};border-radius:6px;font-size:12px;font-weight:600;color:${pct>=100?'#fff':'#2D3A2E'};">${toBnNum(d)}</div>`;
+    }
+
+    // Main HTML Assembly for Landscape PDF
+    return `
+    <div style="width:1500px;background:#F4F6F8;font-family:${fontFamily};color:#2D3A2E;padding:32px;display:grid;grid-template-columns:300px 1fr;gap:24px;">
+        
+        <!-- Left Sidebar: Title & Overall Chart -->
+        <div style="display:flex;flex-direction:column;gap:24px;">
+            <div style="background:#fff;border-radius:16px;padding:32px 24px;box-shadow:0 4px 12px rgba(0,0,0,0.03);position:relative;overflow:hidden;">
+                <div style="position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:${primary}11;"></div>
+                <div style="font-size:32px;font-weight:800;line-height:1.2;margin-bottom:20px;color:#1a202c;">Monthly<br/>Habit Progress<br/>Report</div>
+                
+                <div style="display:flex;flex-direction:column;gap:8px;font-size:14px;color:#4a5568;margin-bottom:30px;">
+                    <div style="display:flex;justify-content:space-between;"><span>Month:</span> <span style="font-weight:600;">${monthName}</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>Year:</span> <span style="font-weight:600;">${toBnNum(year)}</span></div>
+                </div>
+
+                <div style="text-align:center;margin-top:20px;">
+                    <div style="position:relative;width:180px;height:180px;margin:0 auto;">
+                        <svg viewBox="0 0 100 100" style="transform:rotate(-90deg);width:100%;height:100%;">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="#eee" stroke-width="10"/>
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="${primary}" stroke-width="10" stroke-dasharray="282.7" stroke-dashoffset="${282.7 - (282.7 * overallPct / 100)}" stroke-linecap="round"/>
+                        </svg>
+                        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:36px;font-weight:800;color:${primary};">${toBnNum(overallPct)}%</div>
+                    </div>
+                    <div style="font-size:14px;font-weight:600;color:#718096;margin-top:12px;">Overall Completion</div>
                 </div>
             </div>
-            <div style="text-align:right;">
-                <div style="font-size:14px; color:${theme.textMuted}; margin-bottom:4px;">${isBengali ? 'রিপোর্ট তৈরি:' : 'Generated on:'}</div>
-                <div style="font-size:18px; font-weight:700;">${new Date().toLocaleDateString(state.currentLang === 'bn' ? 'bn-BD' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+
+            <div style="background:#fff;border-radius:16px;padding:24px;box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+                <div style="font-size:16px;font-weight:700;margin-bottom:16px;"> Executive Summary</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                    <div>
+                        <div style="font-size:24px;font-weight:800;color:${primary};">${toBnNum(totalHabits)}</div>
+                        <div style="font-size:12px;color:#718096;font-weight:600;">Total Habits</div>
+                    </div>
+                    <div>
+                        <div style="font-size:24px;font-weight:800;color:#4a5568;">${toBnNum(totalPossible)}</div>
+                        <div style="font-size:12px;color:#718096;font-weight:600;">Planned Check-ins</div>
+                    </div>
+                    <div>
+                        <div style="font-size:24px;font-weight:800;color:#2A9D8F;">${toBnNum(totalChecks)}</div>
+                        <div style="font-size:12px;color:#718096;font-weight:600;">Completed</div>
+                    </div>
+                    <div>
+                        <div style="font-size:24px;font-weight:800;color:#E76F51;">${toBnNum(totalPossible - totalChecks)}</div>
+                        <div style="font-size:12px;color:#718096;font-weight:600;">Missed</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="pdf-grid">
-            <!-- Left Sidebar -->
-            <div style="display:flex; flex-direction:column; gap:24px;">
-                <div class="pdf-card" style="text-align:center; padding: 40px 20px;">
-                    <div style="position:relative; width:220px; height:220px; margin:0 auto 20px auto;">
-                        ${svgRing(overallPct, 220, 4)}
-                        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); text-align:center;">
-                            <div style="font-size:54px; font-weight:800; color:${theme.primary}; line-height:1;">${toBnNum(overallPct)}%</div>
-                            <div style="font-size:14px; color:${theme.textMuted}; margin-top:8px; font-weight:600;">${isBengali ? 'সামগ্রিক সম্পন্নতা' : 'Overall Completion'}</div>
-                        </div>
-                    </div>
-                    <div style="background:${theme.lightGreen}; padding:16px; border-radius:12px; font-size:14px; color:${theme.primary}; font-weight:600;">
-                        ${isBengali ? 'অসাধারণ! ধারাবাহিকতাই সাফল্যের চাবিকাঠি।' : 'Keep going! Consistency builds success.'}
-                    </div>
-                </div>
-
-                <div class="pdf-card">
-                    <h3 class="pdf-card-title">📊 ${isBengali ? 'মূল পরিসংখ্যান' : 'Key Statistics'}</h3>
-                    <div class="stat-grid" style="grid-template-columns: 1fr;">
-                        <div class="stat-box">
-                            <div class="stat-icon">🎯</div>
-                            <div><div class="stat-val">${toBnNum(state.habits.daily.length + state.habits.weekly.length + state.habits.monthly.length)}</div><div class="stat-label">${isBengali ? 'মোট অভ্যাস' : 'Total Habits'}</div></div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-icon">✅</div>
-                            <div><div class="stat-val">${toBnNum(totalCompleted)} / ${toBnNum(totalPossible)}</div><div class="stat-label">${isBengali ? 'সম্পন্ন চেক-ইন' : 'Completed Check-ins'}</div></div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-icon" style="background:#FFF3E0; color:${theme.warning};">⭐</div>
-                            <div><div class="stat-val" style="font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:180px;">${mostConsistent}</div><div class="stat-label">${isBengali ? 'সেরা অভ্যাস' : 'Most Consistent'}</div></div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-icon" style="background:#FFEBEE; color:${theme.danger};">📉</div>
-                            <div><div class="stat-val" style="font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:180px;">${leastConsistent}</div><div class="stat-label">${isBengali ? 'সবচেয়ে দুর্বল অভ্যাস' : 'Needs Improvement'}</div></div>
-                        </div>
-                    </div>
-                </div>
-
-                ${entries.reflection.text || entries.reflection.photo ? `
-                <div class="pdf-card" style="flex:1;">
-                    <h3 class="pdf-card-title">🪞 ${t('reflection')}</h3>
-                    <div style="font-size:13px; line-height:1.8; color:${theme.text}; font-style:italic; border-left:4px solid ${theme.primary}; padding-left:12px;">
-                        "${(entries.reflection.text || '').replace(/</g,'&lt;')}"
-                    </div>
-                    ${entries.reflection.photo ? `<img src="${entries.reflection.photo}" style="width:100%; border-radius:8px; margin-top:16px; border:1px solid ${theme.border};">` : ''}
-                </div>` : ''}
-            </div>
-
-            <!-- Right Main Area -->
-            <div>
-                <!-- Top Row -->
-                <div class="main-grid-3">
-                    <!-- Exec Summary -->
-                    <div class="pdf-card">
-                        <h3 class="pdf-card-title">📈 ${isBengali ? 'সারাংশ' : 'Executive Summary'}</h3>
-                        <div class="stat-grid">
-                            <div class="stat-box">
-                                <div class="stat-icon" style="font-size:14px;">☀️</div>
-                                <div><div class="stat-val">${toBnNum(state.habits.daily.length)}</div><div class="stat-label">${isBengali ? 'দৈনিক' : 'Daily Habits'}</div></div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-icon" style="font-size:14px;">📅</div>
-                                <div><div class="stat-val">${toBnNum(state.habits.weekly.length)}</div><div class="stat-label">${isBengali ? 'সাপ্তাহিক' : 'Weekly'}</div></div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-icon" style="background:#E3F2FD; color:#2196F3;">📈</div>
-                                <div><div class="stat-val">${toBnNum(bestDayIdx)} ${monthName}</div><div class="stat-label">${isBengali ? 'সেরা দিন' : 'Best Day'} (${toBnNum(Math.round(maxDayPct))}%)</div></div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-icon" style="background:#FFEBEE; color:${theme.danger};">📉</div>
-                                <div><div class="stat-val">${toBnNum(worstDayIdx)} ${monthName}</div><div class="stat-label">${isBengali ? 'সবচেয়ে খারাপ দিন' : 'Worst Day'} (${toBnNum(Math.round(minDayPct))}%)</div></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Habit Rankings -->
-                    <div class="pdf-card">
-                        <h3 class="pdf-card-title">🏆 ${isBengali ? 'শীর্ষ অভ্যাসসমূহ' : 'Top Rankings'}</h3>
-                        <table class="pdf-table" style="margin-top:-8px;">
-                            ${habitRankings.slice(0, 5).map((hr, idx) => `
-                            <tr>
-                                <td style="padding:6px 0; font-size:12px; font-weight:600; color:${theme.textMuted}; width:20px;">${toBnNum(idx+1)}</td>
-                                <td style="padding:6px 0; font-size:12px; font-weight:500;">${hr.name}</td>
-                                <td style="padding:6px 0; font-size:12px; font-weight:700; text-align:right; color:${theme.primary};">${toBnNum(hr.pct)}%</td>
-                            </tr>
-                            `).join('')}
-                        </table>
-                    </div>
-
-                    <!-- Calendar Heatmap -->
-                    <div class="pdf-card">
-                        <h3 class="pdf-card-title">🗓️ ${isBengali ? 'ক্যালেন্ডার হিটম্যাপ' : 'Calendar Heatmap'}</h3>
-                        ${calendarHtml}
-                        <div style="display:flex; justify-content:center; gap:12px; margin-top:12px; font-size:10px; color:${theme.textMuted};">
-                            <div style="display:flex; align-items:center; gap:4px;"><span style="width:10px; height:10px; background:${theme.success}; border-radius:2px;"></span> 75%+</div>
-                            <div style="display:flex; align-items:center; gap:4px;"><span style="width:10px; height:10px; background:#81C784; border-radius:2px;"></span> 50%+</div>
-                            <div style="display:flex; align-items:center; gap:4px;"><span style="width:10px; height:10px; background:#FFCC80; border-radius:2px;"></span> 25%+</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tables Row -->
-                <div class="pdf-card" style="margin-bottom:24px;">
-                    <h3 class="pdf-card-title">☀️ ${isBengali ? 'দৈনিক অভ্যাস বিশ্লেষণ' : 'Daily Habit Analysis'}</h3>
-                    <table class="pdf-table">
+        <!-- Right Content Area: Tables & Calendar -->
+        <div style="display:grid;grid-template-columns:1fr;gap:24px;">
+            
+            <div style="display:grid;grid-template-columns:2fr 1fr;gap:24px;">
+                <!-- Daily Habit Analysis -->
+                <div style="background:#fff;border-radius:16px;padding:24px;box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+                    <div style="font-size:18px;font-weight:700;margin-bottom:16px;border-bottom:2px solid #f7fafc;padding-bottom:12px;">Daily Habit Analysis</div>
+                    <table style="width:100%;border-collapse:collapse;font-size:13px;text-align:left;">
                         <thead>
-                            <tr>
-                                <th>${isBengali ? 'অভ্যাসের নাম' : 'Habit Name'}</th>
-                                <th style="text-align:center;">${isBengali ? 'লক্ষ্য (দিন)' : 'Target'}</th>
-                                <th style="text-align:center;">${isBengali ? 'সম্পন্ন' : 'Completed'}</th>
-                                <th style="text-align:center;">${isBengali ? 'বাদ' : 'Missed'}</th>
-                                <th>${isBengali ? 'অগ্রগতি' : 'Completion %'}</th>
-                                <th style="text-align:center;">${isBengali ? 'সেরা স্ট্রিক' : 'Best Streak'}</th>
+                            <tr style="color:#718096;border-bottom:2px solid #edf2f7;">
+                                <th style="padding:10px;">Habit Name</th>
+                                <th style="padding:10px;text-align:center;">Target Days</th>
+                                <th style="padding:10px;text-align:center;">Completed</th>
+                                <th style="padding:10px;text-align:center;">Missed</th>
+                                <th style="padding:10px;">Completion %</th>
+                                <th style="padding:10px;text-align:center;">Best Streak</th>
                             </tr>
                         </thead>
                         <tbody>${dailyRows}</tbody>
                     </table>
                 </div>
 
-                <div class="main-grid-2">
-                    <div class="pdf-card">
-                        <h3 class="pdf-card-title">📅 ${isBengali ? 'সাপ্তাহিক অভ্যাস বিশ্লেষণ' : 'Weekly Habit Analysis'}</h3>
-                        <table class="pdf-table">
-                            <thead>
-                                <tr>
-                                    <th>${isBengali ? 'অভ্যাসের নাম' : 'Habit Name'}</th>
-                                    <th style="text-align:center;">${isBengali ? 'লক্ষ্য' : 'Target'}</th>
-                                    <th style="text-align:center;">${isBengali ? 'সম্পন্ন' : 'Completed'}</th>
-                                    <th>${isBengali ? 'অগ্রগতি' : 'Completion %'}</th>
-                                    <th style="text-align:center;">${isBengali ? 'স্ট্যাটাস' : 'Status'}</th>
-                                </tr>
-                            </thead>
-                            <tbody>${weeklyRows}</tbody>
-                        </table>
-                    </div>
-
-                    <div class="pdf-card">
-                        <h3 class="pdf-card-title">🗓️ ${isBengali ? 'মাসিক অভ্যাস বিশ্লেষণ' : 'Monthly Habit Analysis'}</h3>
-                        <table class="pdf-table">
-                            <thead>
-                                <tr>
-                                    <th>${isBengali ? 'অভ্যাসের নাম' : 'Habit Name'}</th>
-                                    <th style="text-align:center;">${isBengali ? 'লক্ষ্য' : 'Target'}</th>
-                                    <th style="text-align:center;">${isBengali ? 'সম্পন্ন' : 'Completed'}</th>
-                                    <th style="text-align:center;">${isBengali ? 'স্ট্যাটাস' : 'Status'}</th>
-                                </tr>
-                            </thead>
-                            <tbody>${monthlyRows}</tbody>
-                        </table>
+                <!-- Calendar Heatmap -->
+                <div style="background:#fff;border-radius:16px;padding:24px;box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+                    <div style="font-size:18px;font-weight:700;margin-bottom:16px;border-bottom:2px solid #f7fafc;padding-bottom:12px;">Calendar Heatmap</div>
+                    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;">${calendarCells}</div>
+                    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px;font-size:10px;color:#718096;">
+                        <div style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:${primary};border-radius:2px;"></span> 100%</div>
+                        <div style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:${primary}88;border-radius:2px;"></span> 50-99%</div>
+                        <div style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:${primary}44;border-radius:2px;"></span> 1-49%</div>
+                        <div style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#F6F3EA;border-radius:2px;"></span> 0%</div>
                     </div>
                 </div>
-
             </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+                <!-- Weekly Habit Analysis -->
+                <div style="background:#fff;border-radius:16px;padding:24px;box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+                    <div style="font-size:18px;font-weight:700;margin-bottom:16px;border-bottom:2px solid #f7fafc;padding-bottom:12px;">Weekly Habit Analysis</div>
+                    <table style="width:100%;border-collapse:collapse;font-size:13px;text-align:left;">
+                        <thead>
+                            <tr style="color:#718096;border-bottom:2px solid #edf2f7;">
+                                <th style="padding:10px;">Habit</th>
+                                <th style="padding:10px;text-align:center;">Occurrences</th>
+                                <th style="padding:10px;text-align:center;">Completion %</th>
+                                <th style="padding:10px;text-align:center;">Status Matrix</th>
+                            </tr>
+                        </thead>
+                        <tbody>${weeklyRows || '<tr><td colspan="4" style="text-align:center;padding:10px;">No weekly habits</td></tr>'}</tbody>
+                    </table>
+                </div>
+
+                <!-- Monthly Habit Analysis & Reflection -->
+                <div style="display:flex;flex-direction:column;gap:24px;">
+                    <div style="background:#fff;border-radius:16px;padding:24px;box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+                        <div style="font-size:18px;font-weight:700;margin-bottom:16px;border-bottom:2px solid #f7fafc;padding-bottom:12px;">Monthly Habit Analysis</div>
+                        <table style="width:100%;border-collapse:collapse;font-size:13px;text-align:left;">
+                            <thead>
+                                <tr style="color:#718096;border-bottom:2px solid #edf2f7;">
+                                    <th style="padding:10px;">Habit</th>
+                                    <th style="padding:10px;text-align:center;">Target</th>
+                                    <th style="padding:10px;text-align:center;">Completed</th>
+                                    <th style="padding:10px;text-align:center;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>${monthlyRows || '<tr><td colspan="4" style="text-align:center;padding:10px;">No monthly habits</td></tr>'}</tbody>
+                        </table>
+                    </div>
+                    
+                    ${entries.reflection.text || entries.reflection.photo ? `
+                    <div style="background:#fff;border-radius:16px;padding:24px;box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+                        <div style="font-size:16px;font-weight:700;margin-bottom:12px;color:#2D3A2E;">Monthly Reflection</div>
+                        ${entries.reflection.text ? `<div style="font-size:13px;color:#4a5568;line-height:1.6;padding:12px;background:#f7fafc;border-left:4px solid ${primary};border-radius:4px;white-space:pre-wrap;">${entries.reflection.text.replace(/</g,'&lt;')}</div>` : ''}
+                        ${entries.reflection.photo ? `<div style="margin-top:12px;text-align:center;"><img src="${entries.reflection.photo}" style="max-width:100%;max-height:150px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);"/></div>` : ''}
+                    </div>
+                    ` : ''}
+                </div>
+            </div>
+            
         </div>
     </div>`;
 }
@@ -2235,26 +2116,25 @@ async function generatePDF() {
         container.style.left = '-99999px';
         container.style.top = '0';
         container.style.zIndex = '-1';
-        // Dashboard HTML layout string generated by our updated function
         container.innerHTML = buildReportHTML(entries, days, monthName, year);
         document.body.appendChild(container);
 
         if (document.fonts && document.fonts.ready) {
             await document.fonts.ready;
         }
-        await new Promise(r => setTimeout(r, 250)); // Give browser extra time for rendering large grid
+        await new Promise(r => setTimeout(r, 200));
 
         const canvas = await window.html2canvas(container.firstElementChild, {
-            scale: 2, // High resolution
-            backgroundColor: '#F4F7F6',
+            scale: 2,
+            backgroundColor: '#F4F6F8',
             useCORS: true,
             logging: false
         });
 
         const { jsPDF } = window.jspdf;
-        // CHANGED: Use landscape orientation ('l') instead of portrait
+        // Landscape orientation ('l')
         const doc = new jsPDF('l', 'mm', 'a4');
-        const pdfWidth = 297, pdfHeight = 210; // Landscape dimensions
+        const pdfWidth = 297, pdfHeight = 210; // A4 landscape size
         const pxPerMm = canvas.width / pdfWidth;
         const pageHeightPx = pdfHeight * pxPerMm;
 
@@ -2266,7 +2146,7 @@ async function generatePDF() {
             pageCanvas.width = canvas.width;
             pageCanvas.height = sliceHeightPx;
             const ctx = pageCanvas.getContext('2d');
-            ctx.fillStyle = '#F4F7F6';
+            ctx.fillStyle = '#F4F6F8';
             ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
             ctx.drawImage(canvas, 0, renderedPx, canvas.width, sliceHeightPx, 0, 0, canvas.width, sliceHeightPx);
             const pageData = pageCanvas.toDataURL('image/jpeg', 0.95);
